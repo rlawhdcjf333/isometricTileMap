@@ -82,6 +82,9 @@
     <Filter Include="MainGame\UI">
       <UniqueIdentifier>{f8437ecb-be49-457f-82b1-f0e54de31a37}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FrameWork\PathFinder">
+      <UniqueIdentifier>{114223ba-8055-4022-99d6-29f3955b4ba7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -189,6 +192,9 @@
     <ClInclude Include="TileList.h">
       <Filter>FrameWork\MapTool</Filter>
     </ClInclude>
+    <ClInclude Include="PathFinder.h">
+      <Filter>FrameWork\PathFinder</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="01_WinMain.cpp">
@@ -283,6 +289,9 @@
     </ClCompile>
     <ClCompile Include="TileList.cpp">
       <Filter>FrameWork\MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFinder.cpp">
+      <Filter>FrameWork\PathFinder</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

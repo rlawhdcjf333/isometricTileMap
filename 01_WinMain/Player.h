@@ -8,13 +8,15 @@ class Player : public GameObject
 	Image* mImage;
 	TileSelect* mTileSelect;
 	Tile* mStandingTile;
-
+	vector<Tile*> mPath;
 	float mSpeed;
 	float mTime;
 	int mFrameX;
 
 	int mMoveToX;
 	int mMoveToY;
+
+	int mPathIndex = 0;
 
 public:
 

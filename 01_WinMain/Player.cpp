@@ -47,22 +47,39 @@ void Player::Update()
 
 	if (Input::GetInstance()->GetKey(VK_RBUTTON) and mTileSelect)
 	{
-		mMoveToX = mTileSelect->GetTileX()+30;
+		mMoveToX = mTileSelect->GetTileX() + 30;
 		mMoveToY = mTileSelect->GetTileY();
-	}
-	
-	if (mMoveToX != mX or mMoveToY != mY)
-	{
-		float angle = Math::GetAngle(mX, mY, mMoveToX, mMoveToY);
-		mX += (mSpeed)*dTime*cosf(angle);
-		mY -= (mSpeed)*dTime*sinf(angle);
-
-		if (abs(mX - mMoveToX) < mSpeed*dTime and abs(mY - mMoveToY) < mSpeed*dTime)
-		{
-			mX = mMoveToX;
-			mY = mMoveToY;
+		if (TILE[mTileSelect->GetTileIndexY()][mTileSelect->GetTileIndexX()]->GetType() != TileType::Block) {
+			mPathIndex = 0;
+			mPath = PathFinder::GetInstance()->FindPath(TILE, TileList::GetInstance()->CalcTileX(mStandingTile), TileList::GetInstance()->CalcTileY(mStandingTile),
+				mTileSelect->GetTileIndexX(), mTileSelect->GetTileIndexY());
 		}
 	}
+	
+	//if (mMoveToX != mX or mMoveToY != mY)
+	//{
+	//	float angle = Math::GetAngle(mX, mY, mMoveToX, mMoveToY);
+	//	mX += (mSpeed)*dTime*cosf(angle);
+	//	mY -= (mSpeed)*dTime*sinf(angle);
+	//
+	//	if (abs(mX - mMoveToX) < mSpeed*dTime and abs(mY - mMoveToY) < mSpeed*dTime)
+	//	{
+	//		mX = mMoveToX;
+	//		mY = mMoveToY;
+	//	}
+	//}
+	if (!mPath.empty()) {
+		if (mPath.size() <= mPathIndex){
+			mPath.clear();
+			mPathIndex = 0;
+		}
+		else {
+			mX = mPath[mPathIndex]->GetX() + 30;
+			mY = mPath[mPathIndex]->GetY();
+			mPathIndex++;
+		}
+	}
+
 
 	mRect = RectMakeCenter(mX, mY, mSizeX, mSizeY);
 

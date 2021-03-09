@@ -18,7 +18,6 @@ class Tile
 	int mFrameY;
 	int mSizeX;
 	int mSizeY;
-
 	RECT mRect;
 	Diam mDiam;
 	TileType mTileType;

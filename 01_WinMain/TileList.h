@@ -12,7 +12,8 @@ private:
 public:
 	inline void SetMap(TileMap tileMap) { mTileList = tileMap; }
 	inline TileMap GetMap() { return mTileList; }
-
+	int CalcTileX(Tile* tile);
+	int CalcTileY(Tile* tile);
 };
 
 #define TILE  TileList::GetInstance()->GetMap()
