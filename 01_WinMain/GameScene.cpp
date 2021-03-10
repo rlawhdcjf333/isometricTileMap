@@ -6,7 +6,7 @@
 void GameScene::Init()
 {
 	MapLoad();
-	mPlayer = new Player(TILE[30][30]->GetX()+30, TILE[30][30]->GetY()+15, 30,30);
+	mPlayer = new Player(30,30, 30,30);
 	mPlayer->Init();
 
 	CAMERA->ChangeMode(Camera::Mode::Follow);

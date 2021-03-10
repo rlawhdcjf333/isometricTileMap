@@ -7,24 +7,22 @@ class Player : public GameObject
 {
 	Image* mImage;
 	TileSelect* mTileSelect;
-	Tile* mStandingTile;
 	vector<Tile*> mPath;
 	float mSpeed;
 	float mAngle;
 	float mTime;
 	int mFrameX;
 
+	int mIndexX;
+	int mIndexY;
+
 	int mPathIndex = 0;
 
 public:
 
-	Player(float x, float y, float sizeX, float sizeY);
+	Player(int indexX, int indexY, float sizeX, float sizeY);
 	void Init();
 	void Update();
 	void Release();
 	void Render(HDC hdc);
-
-
-	void CalcTile(int x, int y);
-	
 };

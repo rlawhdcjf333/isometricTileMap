@@ -2,11 +2,13 @@
 #include "Player.h"
 #include "TileSelect.h"
 
-Player::Player(float x, float y, float sizeX, float sizeY)
+Player::Player(int indexX, int indexY, float sizeX, float sizeY)
 	:GameObject("Player"), mTime(0), mFrameX(0)  
 {
-	mX = x;
-	mY = y;
+	mIndexX = indexX;
+	mIndexY = indexY;
+	mX = TILE[mIndexY][mIndexX]->GetX()+30;
+	mY = TILE[mIndexY][mIndexX]->GetY()+15;
 	mSpeed = 200;
 	mAngle = 0;
 	mSizeX = sizeX;
@@ -32,8 +34,8 @@ void Player::Update()
 	}
 	if (mFrameX > 3) mFrameX = 0;
 
-	CalcTile(mX, mY);
-	if (mStandingTile->GetType() == TileType::Slow)
+ 
+	if (TILE[mIndexY][mIndexX]->GetType() == TileType::Slow)
 	{
 		mSpeed = 100;
 	}
@@ -44,18 +46,18 @@ void Player::Update()
 
 	mTileSelect->Update();
 
-	if (Input::GetInstance()->GetKey(VK_RBUTTON) and mTileSelect)
+	if (Input::GetInstance()->GetKeyUp(VK_RBUTTON) and mTileSelect)
 	{
-		mPath = PathFinder::GetInstance()->FindPath(TILE,mStandingTile->GetIndexX(), mStandingTile->GetIndexY(),
+		mPath = PathFinder::GetInstance()->FindPath(TILE,mIndexX, mIndexY,
 		mTileSelect->GetIndexX(), mTileSelect->GetIndexY());
-		mPathIndex = 1;
+		mPathIndex = 0;
 	}
 	
 	
 	if (!mPath.empty()) {
 		if (mPath.size()<= mPathIndex){
 			mPath.clear();
-			mPathIndex = 1;
+			mPathIndex = 0;
 		}
 		else 
 		{
@@ -69,6 +71,8 @@ void Player::Update()
 			{
 				mX = pathX;
 				mY = pathY;
+				mIndexX = mPath[mPathIndex]->GetIndexX();
+				mIndexY = mPath[mPathIndex]->GetIndexY();
 				mPathIndex++;
 			}
 
@@ -90,19 +94,12 @@ void Player::Render(HDC hdc)
 	CAMERA->ScaleFrameRender(hdc, mImage,mRect.left, mRect.top, mFrameX, 0, mSizeX, mSizeY);
 	//mImage->ScaleFrameRender(hdc, mX-mSizeX/2, mY-mSizeY, mFrameX, 0, mSizeX, mSizeY);
 	mTileSelect->Render(hdc);
-}
 
-void Player::CalcTile(int x, int y)
-{
-	int tileX = y / TileSizeY + x / TileSizeX - (StartX / TileSizeX + StartY / TileSizeY);
-	int tileY = y / TileSizeY - x / TileSizeX + (StartX / TileSizeX - StartY / TileSizeY);
-	int offsetX = x % TileSizeX;
-	int offsetY = y % TileSizeY;
 
-	if (offsetY < TileSizeY / 2 - offsetX / 2) { tileX--; }
-	if (offsetY < offsetX / 2 - TileSizeY / 2) { tileY--; }
-	if (offsetY > offsetX / 2 + TileSizeY / 2) { tileY++; }
-	if (offsetY > 3 * TileSizeY / 2 - offsetX / 2) { tileX++; }
-
-	mStandingTile = TILE[tileY][tileX];
+	TILE[mIndexY][mIndexX]->SelectRender(hdc);
+	
+	for (Tile* elem : mPath)
+	{
+		elem->SelectRender(hdc);
+	}
 }
