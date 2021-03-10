@@ -11,6 +11,7 @@ class MainGame
 {
 	Camera* mCamera;
 	Image* mBackBuffer;	//후면버퍼(건들지마라)
+	Image* mCursorImage;
 
 public:
 	void Init();

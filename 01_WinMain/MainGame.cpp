@@ -12,9 +12,13 @@ Initialize : ÃÊ±âÈ­
 */
 void MainGame::Init()
 {
+	ShowCursor(false);
 	mBackBuffer = new Image();
 	mBackBuffer->CreateEmpty(WINSIZEX, WINSIZEY);
-
+	//IMAGEMANAGER->LoadFromFile(L"Sans", Resources(L"Sans.bmp"), 92, 30, 4, 1, true);
+	//mImage = IMAGEMANAGER->GetInstance()->FindImage(L"Sans");
+	ImageManager::GetInstance()->LoadFromFile(L"Cursor", Resources(L"Cursor.bmp"), 21, 21, true);
+	mCursorImage = ImageManager::GetInstance()->FindImage(L"Cursor");
 	mCamera = new Camera;
 	mCamera->Init();
 	CameraManager::GetInstance()->SetMainCamera(mCamera);
@@ -62,9 +66,9 @@ void MainGame::Render(HDC hdc)
 	// ==================================================
 	{
 		SceneManager::GetInstance()->Render(backDC);
+		mCursorImage->Render(backDC, _mousePosition.x - mCamera->GetRect().left, _mousePosition.y - mCamera->GetRect().top);
+
 		
-
-
 		
 		
 		
