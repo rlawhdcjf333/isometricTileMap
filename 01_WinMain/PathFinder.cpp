@@ -8,7 +8,7 @@ int PathFinder::CalcHeuristic(int idX1, int idY1, int idX2, int idY2)
 {
 	int dx = abs(idX1 - idX2);
 	int dy = abs(idY1 - idY2);
-	int result = dx + dy;
+	int result = dx + dy; //최대로 단순화한 Manhattan Heuristic. 사방 이동 휴리스틱 계산에만 사용하지만 iso에서는 사방 이동이 곧 대각이동이다.
 	return result;
 }
 
