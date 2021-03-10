@@ -30,7 +30,7 @@ bool PathFinder::FindPath(const vector<vector<class Tile*>>& tileList, vector<Ti
 	if (arrivalY < 0 || arrivalY >= tileCountY)return false;
 	// }} 
 
-	vector<vector<DummyTile>> dummyList;	// 에이스타 연산 도와줄 더미 타일 리스트
+	//vector<vector<DummyTile>> dummyList;	// 에이스타 연산 도와줄 더미 타일 리스트
 	// {{ 2차원 더미 타일 세팅 ~
 	//첫번째 인자로 들어온 수 만큼 두번째 인자로 들어온 값을 복사해서 넣는다 
 	dummyList.assign(tileCountY, vector<DummyTile>());
@@ -47,9 +47,18 @@ bool PathFinder::FindPath(const vector<vector<class Tile*>>& tileList, vector<Ti
 		dummyList[startIndexY][startIndexX].CostToEnd;
 
 	//우선순위 큐로 수정하면 더 빨라짐
-	
-	//priority_queue <Tile*, vector<Tile*>, comp> openList;
-	vector<Tile*> openList;	//갈 수 있는 길 후보들을 담을 녀석
+	struct comp //costTotal이 가장 작은 친구를 가장 앞에 정렬하는 비교연산조건... 이거 왜 람다는 안들어가는 걸까요
+	{
+		bool operator() (Tile* a, Tile* b)
+		{
+			DummyTile first = PathFinder::GetInstance()->dummyList[a->GetIndexY()][a->GetIndexX()];
+			DummyTile second = PathFinder::GetInstance()->dummyList[b->GetIndexY()][b->GetIndexX()];
+
+			return first.CostTotal > second.CostTotal;
+		}
+	};
+	priority_queue<Tile*, vector<Tile*>, comp> openList;
+	//vector<Tile*> openList;	//갈 수 있는 길 후보들을 담을 녀석
 
 	Tile* startTile = tileList[startIndexY][startIndexX];
 	Tile* arrivalTile = tileList[arrivalY][arrivalX];
@@ -96,7 +105,7 @@ bool PathFinder::FindPath(const vector<vector<class Tile*>>& tileList, vector<Ti
 					dummyList[y][x].CostTotal =
 						dummyList[y][x].CostFromStart + dummyList[y][x].CostToEnd;
 
-					openList.push_back(tileList[y][x]);
+					openList.push(tileList[y][x]);
 				}
 				//처음이 아니라면 ~ 여기까지 확장하는데 다른 경로를 통해서 확장이 되었다는 뜻
 				else
@@ -118,43 +127,39 @@ bool PathFinder::FindPath(const vector<vector<class Tile*>>& tileList, vector<Ti
 
 		// {{ openList에서 가장 적은 비용의 타일 검사 ~
 		Tile* tileMin = nullptr;
-		
-	//while (!openList.empty())
-	//{
-	//	if (openList.top() == currentTile)
-	//	{
-	//		openList.pop(); continue;
-	//	}
-	//	if (tileMin == nullptr)
-	//	{
-	//		tileMin = openList.top();
-	//		continue;
-	//	}
-	//	
-	//	tileMin = openList.top();
-	//	openList.pop();
-	//}
-		for (int i = 0; i < openList.size(); ++i)
+
+		if (openList.top() == currentTile)
 		{
-			if (openList[i] == currentTile)
-			{
-				openList.erase(openList.begin() + i);
-				--i;
-				continue;
-			}
-		
-			if (tileMin == nullptr)
-			{
-				tileMin = openList[i];
-				continue;
-			}
-			if (dummyList[openList[i]->GetIndexY()][openList[i]->GetIndexX()].CostTotal <
-				dummyList[tileMin->GetIndexY()][tileMin->GetIndexX()].CostToEnd)
-			{
-				tileMin = openList[i];
-			}
-		
+			openList.pop();
 		}
+		//if (tileMin == nullptr)
+		//{
+		//	tileMin = openList.top();
+		//}
+		if(!openList.empty()) //front() empty vector 이거 보기 싫으면 막자. 안하면 틈틈이 invalid comparator 이거도 볼 수 있다.
+		tileMin = openList.top();
+
+		//for (int i = 0; i < openList.size(); ++i)
+		//{
+		//	if (openList[i] == currentTile)
+		//	{
+		//		openList.erase(openList.begin() + i);
+		//		--i;
+		//		continue;
+		//	}
+		//
+		//	if (tileMin == nullptr)
+		//	{
+		//		tileMin = openList[i];
+		//		continue;
+		//	}
+		//	if (dummyList[openList[i]->GetIndexY()][openList[i]->GetIndexX()].CostTotal <
+		//		dummyList[tileMin->GetIndexY()][tileMin->GetIndexX()].CostToEnd)
+		//	{
+		//		tileMin = openList[i];
+		//	}
+		//
+		//}
 
 
 		

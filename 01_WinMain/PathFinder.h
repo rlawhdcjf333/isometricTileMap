@@ -2,7 +2,7 @@
 class PathFinder
 {
 	Singleton(PathFinder)
-public:
+private:
 	struct DummyTile
 	{
 		class Tile* Parent;
@@ -16,6 +16,9 @@ public:
 			:Parent(nullptr), IsOpen(false), IsClose(false),
 			CostTotal(MAXINT), CostFromStart(MAXINT), CostToEnd(MAXINT) {}
 	};
+
+	vector<vector<DummyTile>> dummyList;
+	
 public:
 	int CalcHeuristic(int idX1, int idY1, int idX2, int idY2);
 
