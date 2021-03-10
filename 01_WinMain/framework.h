@@ -15,6 +15,7 @@
 #include <iostream>
 #include <functional>
 #include <stack>
+#include <queue>
 #include <fstream>
 
 using namespace std;

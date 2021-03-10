@@ -7,9 +7,8 @@ Player::Player(float x, float y, float sizeX, float sizeY)
 {
 	mX = x;
 	mY = y;
-	mMoveToX = x;
-	mMoveToY = y;
 	mSpeed = 200;
+	mAngle = 0;
 	mSizeX = sizeX;
 	mSizeY = sizeY;
 	mRect = RectMakeBottom(mX, mY, mSizeX, mSizeY);
@@ -49,20 +48,30 @@ void Player::Update()
 	{
 		mPath = PathFinder::GetInstance()->FindPath(TILE,mStandingTile->GetIndexX(), mStandingTile->GetIndexY(),
 		mTileSelect->GetIndexX(), mTileSelect->GetIndexY());
-		mPathIndex = 0;
+		mPathIndex = 1;
 	}
 	
 	
 	if (!mPath.empty()) {
-		if (mPath.size() <= mPathIndex){
+		if (mPath.size()<= mPathIndex){
 			mPath.clear();
-			mPathIndex = 0;
+			mPathIndex = 1;
 		}
-		else {
+		else 
+		{
+			int pathX = mPath[mPathIndex]->GetX() + TileSizeX/2;
+			int pathY = mPath[mPathIndex]->GetY() + TileSizeY/2;
+			mAngle = Math::GetAngle(mX, mY, pathX, pathY);
+			mX += mSpeed * cosf(mAngle)*dTime;
+			mY -= mSpeed * sinf(mAngle) * dTime;
 
-			mX = mPath[mPathIndex]->GetX()+30;
-			mY = mPath[mPathIndex]->GetY()+15;
-			mPathIndex++;
+			if(abs(mX -pathX) <5 and abs(mY-pathY)<5)
+			{
+				mX = pathX;
+				mY = pathY;
+				mPathIndex++;
+			}
+
 		}
 	}
 

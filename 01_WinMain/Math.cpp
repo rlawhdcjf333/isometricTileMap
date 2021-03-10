@@ -35,6 +35,7 @@ float Math::GetAngle(float aX, float aY, float bX, float bY)
 	float height = bY - aY;
 
 	float distance = sqrtf(width * width + height * height);
+	if (distance == 0) return 0;
 
 	float angle = acos(width / distance);
 

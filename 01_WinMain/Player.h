@@ -10,11 +10,9 @@ class Player : public GameObject
 	Tile* mStandingTile;
 	vector<Tile*> mPath;
 	float mSpeed;
+	float mAngle;
 	float mTime;
 	int mFrameX;
-
-	int mMoveToX;
-	int mMoveToY;
 
 	int mPathIndex = 0;
 
