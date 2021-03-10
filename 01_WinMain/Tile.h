@@ -18,6 +18,8 @@ class Tile
 	int mFrameY;
 	int mSizeX;
 	int mSizeY;
+	int mIndexX;
+	int mIndexY;
 	RECT mRect;
 	Diam mDiam;
 	TileType mTileType;
@@ -25,7 +27,7 @@ class Tile
 
 public:
 
-	Tile(Image* pImage,  float x, float y, int frameX, int frameY, int sizeX, int sizeY);
+	Tile(Image* pImage,  float x, float y, int frameX, int frameY, int sizeX, int sizeY, int indexX, int indexY);
 	void Render(HDC hdc);
 	void SelectRender(HDC hdc);
 
@@ -38,6 +40,10 @@ public:
 	void SetFrameX(int val) { mFrameX = val; }
 	int GetFrameY() { return mFrameY; }
 	void SetFrameY(int val) { mFrameY = val; }
+
+	int GetIndexX() { return mIndexX; }
+	int GetIndexY() { return mIndexY; }
+
 
 	float GetX() { return mX; }
 	float GetY() { return mY; }

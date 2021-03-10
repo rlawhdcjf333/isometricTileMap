@@ -14,8 +14,8 @@ public:
 	void Render(HDC hdc);
 
 
-	int GetTileIndexX() { return TileList::GetInstance()->CalcTileX(mCurrentTile); }
-	int GetTileIndexY() { return TileList::GetInstance()->CalcTileY(mCurrentTile); }
+	int GetIndexX() { return mCurrentTile->GetIndexX(); }
+	int GetIndexY() { return mCurrentTile->GetIndexY(); }
 	int GetTileX() { return mCurrentTile->GetX(); }
 	int GetTileY() { return mCurrentTile->GetY(); }
 

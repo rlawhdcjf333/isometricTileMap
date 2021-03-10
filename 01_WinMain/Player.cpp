@@ -12,7 +12,7 @@ Player::Player(float x, float y, float sizeX, float sizeY)
 	mSpeed = 200;
 	mSizeX = sizeX;
 	mSizeY = sizeY;
-	mRect = RectMakeCenter(mX, mY, mSizeX, mSizeY);
+	mRect = RectMakeBottom(mX, mY, mSizeX, mSizeY);
 }
 
 void Player::Init()
@@ -48,12 +48,10 @@ void Player::Update()
 	if (Input::GetInstance()->GetKey(VK_RBUTTON) and mTileSelect)
 	{
 		mMoveToX = mTileSelect->GetTileX() + 30;
-		mMoveToY = mTileSelect->GetTileY();
-		if (TILE[mTileSelect->GetTileIndexY()][mTileSelect->GetTileIndexX()]->GetType() != TileType::Block) {
-			mPathIndex = 0;
-			mPath = PathFinder::GetInstance()->FindPath(TILE, TileList::GetInstance()->CalcTileX(mStandingTile), TileList::GetInstance()->CalcTileY(mStandingTile),
-				mTileSelect->GetTileIndexX(), mTileSelect->GetTileIndexY());
-		}
+		mMoveToY = mTileSelect->GetTileY() + 15;
+		mPath = PathFinder::GetInstance()->FindPath(TILE,mStandingTile->GetIndexX(), mStandingTile->GetIndexY(),
+		mTileSelect->GetIndexX(), mTileSelect->GetIndexY());
+		mPathIndex = 0;
 	}
 	
 	//if (mMoveToX != mX or mMoveToY != mY)

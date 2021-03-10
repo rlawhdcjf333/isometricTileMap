@@ -115,7 +115,9 @@ void MapToolScene::Init()
 				2,
 				3,
 				TileSizeX,
-				TileSizeY
+				TileSizeY,
+				x,
+				y
 				)
 			);
 		}

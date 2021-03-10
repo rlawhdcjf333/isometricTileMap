@@ -2,8 +2,8 @@
 #include "pch.h"
 #include "Tile.h"
 
-Tile::Tile(Image* pImage, float x, float y, int frameX, int frameY, int sizeX, int sizeY)
-	:mX(x), mY(y), mFrameX(frameX), mFrameY(frameY), mSizeX(sizeX), mSizeY(sizeY), mImage(pImage)
+Tile::Tile(Image* pImage, float x, float y, int frameX, int frameY, int sizeX, int sizeY, int indexX, int indexY)
+	:mX(x), mY(y), mFrameX(frameX), mFrameY(frameY), mSizeX(sizeX), mSizeY(sizeY), mImage(pImage), mIndexX(indexX), mIndexY(indexY)
 {
 	mTileType = TileType::Normal;
 	mRect = RectMake(mX, mY, mSizeX, mSizeY);

@@ -6,7 +6,7 @@
 void GameScene::Init()
 {
 	MapLoad();
-	mPlayer = new Player(TILE[30][30]->GetX()+30, TILE[30][30]->GetY(), 30,30);
+	mPlayer = new Player(TILE[30][30]->GetX()+30, TILE[30][30]->GetY()+15, 30,30);
 	mPlayer->Init();
 
 	CAMERA->ChangeMode(Camera::Mode::Follow);
@@ -61,12 +61,14 @@ void GameScene:: MapLoad()
 				new Tile
 				(
 					IMAGEMANAGER->FindImage(L"Tiles"),
-					610 + (x - y) * 60 / 2,
-					100 + (x + y) * 30 / 2,
+					StartX + (x - y) * TileSizeX / 2,
+					StartY + (x + y) * TileSizeY / 2,
 					2,
 					3,
-					60,
-					30
+					TileSizeX,
+					TileSizeY,
+					x,
+					y
 				)
 			);
 		}
