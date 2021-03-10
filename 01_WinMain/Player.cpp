@@ -9,7 +9,7 @@ Player::Player(int indexX, int indexY, float sizeX, float sizeY)
 	mIndexY = indexY;
 	mX = TILE[mIndexY][mIndexX]->GetX()+30;
 	mY = TILE[mIndexY][mIndexX]->GetY()+15;
-	mSpeed = 200;
+	mSpeed = mInitSpeed=200;
 	mAngle = 0;
 	mSizeX = sizeX;
 	mSizeY = sizeY;
@@ -35,50 +35,20 @@ void Player::Update()
 	if (mFrameX > 3) mFrameX = 0;
 
  
+	mSpeed = mInitSpeed;
 	if (TILE[mIndexY][mIndexX]->GetType() == TileType::Slow)
 	{
-		mSpeed = 100;
-	}
-	else
-	{
-		mSpeed = 200;
+		mSpeed = mInitSpeed / 2;
 	}
 
 	mTileSelect->Update();
 
 	if (Input::GetInstance()->GetKey(VK_RBUTTON) and mTileSelect)
 	{
-		mPath = PathFinder::GetInstance()->FindPath(TILE,mIndexX, mIndexY,
-		mTileSelect->GetIndexX(), mTileSelect->GetIndexY());
-		mPathIndex = 1;
+		if(PathFinder::GetInstance()->FindPath(TILE, mPath, mIndexX, mIndexY,
+			mTileSelect->GetIndexX(), mTileSelect->GetIndexY())) mPathIndex = 1;
 	}
-	
-	
-	if (!mPath.empty()) {
-		if (mPath.size()<= mPathIndex){
-			mPath.clear();
-			mPathIndex = 1; //1부터 시작해야 처음 시작한 위치부터 계산을 안한다 // 첫 시작 위치 계산하면 한무 회귀 반복함
-		}
-		else 
-		{
-			int pathX = mPath[mPathIndex]->GetX() + TileSizeX/2;
-			int pathY = mPath[mPathIndex]->GetY() + TileSizeY/2;
-			mAngle = Math::GetAngle(mX, mY, pathX, pathY); //앵글 거리 계산이 0이 나올때 리턴 0으로 막음
-			mX += mSpeed * cosf(mAngle)*dTime;
-			mY -= mSpeed * sinf(mAngle) * dTime;
-
-			if(abs(mX -pathX) <5 and abs(mY-pathY)<5)
-			{
-				mX = pathX;
-				mY = pathY;
-				mIndexX = mPath[mPathIndex]->GetIndexX();
-				mIndexY = mPath[mPathIndex]->GetIndexY();
-				mPathIndex++;
-			}
-
-		}
-	}
-
+	Move();
 
 	mRect = RectMakeBottom(mX, mY, mSizeX, mSizeY);
 
@@ -101,5 +71,33 @@ void Player::Render(HDC hdc)
 	for (Tile* elem : mPath)
 	{
 		elem->SelectRender(hdc);
+	}
+}
+
+void Player::Move()
+{
+	if (!mPath.empty()) {
+		if (mPath.size() <= mPathIndex) {
+			mPath.clear();
+			mPathIndex = 1; //1부터 시작해야 처음 시작한 위치부터 계산을 안한다 // 첫 시작 위치 계산하면 한무 회귀 반복함
+		}
+		else
+		{
+			int pathX = mPath[mPathIndex]->GetX() + TileSizeX / 2;
+			int pathY = mPath[mPathIndex]->GetY() + TileSizeY / 2;
+			mAngle = Math::GetAngle(mX, mY, pathX, pathY); //앵글 거리 계산이 0이 나올때 리턴 0으로 막음
+			mX += mSpeed * cosf(mAngle) * dTime;
+			mY -= mSpeed * sinf(mAngle) * dTime;
+
+			if (abs(mX - pathX) < 5 and abs(mY - pathY) < 5) //오차 보정
+			{
+				mX = pathX;
+				mY = pathY;
+				mIndexX = mPath[mPathIndex]->GetIndexX();
+				mIndexY = mPath[mPathIndex]->GetIndexY();
+				mPathIndex++;
+			}
+
+		}
 	}
 }

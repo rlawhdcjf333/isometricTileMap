@@ -5,7 +5,6 @@ class TileList
 	Singleton(TileList)
 
 private:
-
 	typedef vector<vector<Tile*>> TileMap;
 	TileMap mTileList;
 	

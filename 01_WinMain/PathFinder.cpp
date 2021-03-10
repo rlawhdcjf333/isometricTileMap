@@ -12,22 +12,22 @@ int PathFinder::CalcHeuristic(int idX1, int idY1, int idX2, int idY2)
 	return result;
 }
 
-vector<class Tile*> PathFinder::FindPath(const vector<vector<class Tile*>>& tileList,
+bool PathFinder::FindPath(const vector<vector<class Tile*>>& tileList, vector<Tile*>& output,
 	int startIndexX, int startIndexY, int arrivalX, int arrivalY)
 {
 	vector<Tile*> result;	//결과값 담을 벡터 
 
 	//시작점이 끝점과 같다면 잘못호출된 것
-	if (startIndexX == arrivalX && startIndexY == arrivalY)return result;
+	if (startIndexX == arrivalX && startIndexY == arrivalY) return false;
 	
 	int tileCountY = tileList.size();	//세로 타일 수 
 	int tileCountX = tileList[0].size();	//가로 타일 수 
 
 	// {{ 해당 함수에 값을 잘못 넣었다면 
-	if (startIndexX < 0 || startIndexX >= tileCountX)return result;
-	if (startIndexY < 0 || startIndexY >= tileCountY)return result;
-	if (arrivalX < 0 || arrivalX >= tileCountY)return result;
-	if (arrivalY < 0 || arrivalY >= tileCountY)return result;
+	if (startIndexX < 0 || startIndexX >= tileCountX)return false;
+	if (startIndexY < 0 || startIndexY >= tileCountY)return false;
+	if (arrivalX < 0 || arrivalX >= tileCountY)return false;
+	if (arrivalY < 0 || arrivalY >= tileCountY)return false;
 	// }} 
 
 	vector<vector<DummyTile>> dummyList;	// 에이스타 연산 도와줄 더미 타일 리스트
@@ -47,6 +47,8 @@ vector<class Tile*> PathFinder::FindPath(const vector<vector<class Tile*>>& tile
 		dummyList[startIndexY][startIndexX].CostToEnd;
 
 	//우선순위 큐로 수정하면 더 빨라짐
+	
+	//priority_queue <Tile*, vector<Tile*>, comp> openList;
 	vector<Tile*> openList;	//갈 수 있는 길 후보들을 담을 녀석
 
 	Tile* startTile = tileList[startIndexY][startIndexX];
@@ -57,7 +59,7 @@ vector<class Tile*> PathFinder::FindPath(const vector<vector<class Tile*>>& tile
 	while (true)
 	{
 		//뭔가 잘못되었다??? 
-		if (currentTile == nullptr)return result;
+		if (currentTile == nullptr)return false;
 		int currentIndexX = currentTile->GetIndexX();
 		int currentIndexY = currentTile->GetIndexY();
 		// {{ 주변 8개 타일 검사~
@@ -116,7 +118,22 @@ vector<class Tile*> PathFinder::FindPath(const vector<vector<class Tile*>>& tile
 
 		// {{ openList에서 가장 적은 비용의 타일 검사 ~
 		Tile* tileMin = nullptr;
-
+		
+	//while (!openList.empty())
+	//{
+	//	if (openList.top() == currentTile)
+	//	{
+	//		openList.pop(); continue;
+	//	}
+	//	if (tileMin == nullptr)
+	//	{
+	//		tileMin = openList.top();
+	//		continue;
+	//	}
+	//	
+	//	tileMin = openList.top();
+	//	openList.pop();
+	//}
 		for (int i = 0; i < openList.size(); ++i)
 		{
 			if (openList[i] == currentTile)
@@ -125,7 +142,7 @@ vector<class Tile*> PathFinder::FindPath(const vector<vector<class Tile*>>& tile
 				--i;
 				continue;
 			}
-
+		
 			if (tileMin == nullptr)
 			{
 				tileMin = openList[i];
@@ -136,10 +153,11 @@ vector<class Tile*> PathFinder::FindPath(const vector<vector<class Tile*>>& tile
 			{
 				tileMin = openList[i];
 			}
-
+		
 		}
-		// }}
 
+
+		
 		//여기까지 왔다는 것은 가장 적은 비용의 타일 선정되었다는 것
 		if (tileMin != nullptr)
 		{
@@ -149,7 +167,7 @@ vector<class Tile*> PathFinder::FindPath(const vector<vector<class Tile*>>& tile
 		//OpenList에 아무것도 없다는 뜻 : 갈 수 있는 길이 없다.( 탐색의 여지가 없음)
 		else
 		{
-			return result;
+			return false;
 		}
 		// {{ 도착 지점 찾았다 ~!
 		if (tileMin == arrivalTile)
@@ -164,11 +182,12 @@ vector<class Tile*> PathFinder::FindPath(const vector<vector<class Tile*>>& tile
 
 			reverse(result.begin(), result.end());
 
-			return result;
+			output.assign(result.begin(), result.end());
+			return true;
 		}
 		// }}
 	}
 	// }} 
 
-	return result;
+	return false;
 }

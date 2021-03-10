@@ -9,6 +9,7 @@ class Player : public GameObject
 	TileSelect* mTileSelect;
 	vector<Tile*> mPath;
 	float mSpeed;
+	float mInitSpeed;
 	float mAngle;
 	float mTime;
 	int mFrameX;
@@ -25,4 +26,6 @@ public:
 	void Update();
 	void Release();
 	void Render(HDC hdc);
+
+	void Move();
 };
