@@ -8,8 +8,8 @@ int PathFinder::CalcHeuristic(int idX1, int idY1, int idX2, int idY2)
 {
 	int dx = abs(idX1 - idX2);
 	int dy = abs(idY1 - idY2);
-	int diagonal = max(dx, dy);
-	return diagonal;
+	int result = dx + dy;
+	return result;
 }
 
 vector<class Tile*> PathFinder::FindPath(const vector<vector<class Tile*>>& tileList,

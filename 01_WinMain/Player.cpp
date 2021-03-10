@@ -46,24 +46,24 @@ void Player::Update()
 
 	mTileSelect->Update();
 
-	if (Input::GetInstance()->GetKeyUp(VK_RBUTTON) and mTileSelect)
+	if (Input::GetInstance()->GetKey(VK_RBUTTON) and mTileSelect)
 	{
 		mPath = PathFinder::GetInstance()->FindPath(TILE,mIndexX, mIndexY,
 		mTileSelect->GetIndexX(), mTileSelect->GetIndexY());
-		mPathIndex = 0;
+		mPathIndex = 1;
 	}
 	
 	
 	if (!mPath.empty()) {
 		if (mPath.size()<= mPathIndex){
 			mPath.clear();
-			mPathIndex = 0;
+			mPathIndex = 1; //1부터 시작해야 처음 시작한 위치부터 계산을 안한다 // 첫 시작 위치 계산하면 한무 회귀 반복함
 		}
 		else 
 		{
 			int pathX = mPath[mPathIndex]->GetX() + TileSizeX/2;
 			int pathY = mPath[mPathIndex]->GetY() + TileSizeY/2;
-			mAngle = Math::GetAngle(mX, mY, pathX, pathY);
+			mAngle = Math::GetAngle(mX, mY, pathX, pathY); //앵글 거리 계산이 0이 나올때 리턴 0으로 막음
 			mX += mSpeed * cosf(mAngle)*dTime;
 			mY -= mSpeed * sinf(mAngle) * dTime;
 
