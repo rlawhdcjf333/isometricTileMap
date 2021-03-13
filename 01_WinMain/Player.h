@@ -17,6 +17,7 @@ class Player : public GameObject
 	int mIndexX;
 	int mIndexY;
 
+	bool mIsDash;
 	int mPathIndex = 0;
 
 public:
@@ -27,5 +28,6 @@ public:
 	void Release();
 	void Render(HDC hdc);
 
-	void Move();
+	void Move(float speed);
+	void Dash(int dist);
 };

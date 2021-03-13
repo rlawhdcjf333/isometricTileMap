@@ -14,9 +14,9 @@ public:
 	void Render(HDC hdc);
 
 
-	int GetIndexX() { return mCurrentTile->GetIndexX(); }
-	int GetIndexY() { return mCurrentTile->GetIndexY(); }
-	int GetTileX() { return mCurrentTile->GetX(); }
-	int GetTileY() { return mCurrentTile->GetY(); }
+	int GetIndexX() { if (mCurrentTile) { return  mCurrentTile->GetIndexX(); } }
+	int GetIndexY() { if (mCurrentTile) { return mCurrentTile->GetIndexY(); } }
+	int GetTileX() { if (mCurrentTile) { return mCurrentTile->GetX(); } }
+	int GetTileY() { if (mCurrentTile) { return mCurrentTile->GetY(); } }
 
 };
