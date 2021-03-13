@@ -8,6 +8,7 @@ class Player : public GameObject
 	Image* mImage;
 	TileSelect* mTileSelect;
 	vector<Tile*> mPath;
+	vector<Tile*> mAttackRange;
 	float mSpeed;
 	float mInitSpeed;
 	float mAngle;
@@ -30,4 +31,5 @@ public:
 
 	void Move(float speed);
 	void Dash(int dist);
+	void Attack4Direction(vector<Tile*>& attackRange);
 };

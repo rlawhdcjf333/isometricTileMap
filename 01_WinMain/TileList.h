@@ -14,3 +14,4 @@ public:
 };
 
 #define TILE  TileList::GetInstance()->GetMap()
+#define TILELIST TileList::GetInstance()

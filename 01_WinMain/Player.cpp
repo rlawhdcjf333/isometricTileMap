@@ -44,6 +44,11 @@ void Player::Update()
 
 	mTileSelect->Update();
 
+	if (INPUT->GetKeyDown('D'))
+	{
+		Attack4Direction(mAttackRange);
+	}
+
 	Dash(5);
 
 	if (mIsDash)
@@ -60,7 +65,6 @@ void Player::Update()
 
 		Move(mSpeed);
 	}
-
 
 	mRect = RectMakeBottom(mX, mY, mSizeX, mSizeY);
 
@@ -83,6 +87,11 @@ void Player::Render(HDC hdc)
 	for (Tile* elem : mPath)
 	{
 		elem->SelectRender(hdc);
+	}
+
+	for (Tile* elem : mAttackRange)
+	{
+		elem->SelectRenderBlue(hdc);
 	}
 	//}}
 }
@@ -168,6 +177,48 @@ void Player::Dash(int dist)
 
 		mPathIndex = 1; mIsDash = true;
 
+	}
+
+}
+
+void Player::Attack4Direction(vector<Tile*>& attackRange)
+{
+	attackRange.clear();
+
+	float angle = Math::GetAngle(mX, mY, _mousePosition.x, _mousePosition.y);
+
+	if (angle > 7 * PI / 4 or angle <= PI / 4) //우측
+	{
+		attackRange.push_back(TILE[mIndexY - 1][mIndexX - 1]);
+		attackRange.push_back(TILE[mIndexY - 1][mIndexX]);
+		attackRange.push_back(TILE[mIndexY - 1][mIndexX + 1]);
+		attackRange.push_back(TILE[mIndexY][mIndexX + 1]);
+		attackRange.push_back(TILE[mIndexY + 1][mIndexX + 1]);
+	}
+	else if (angle > PI / 4 and angle <= 3 * PI / 4) //상방
+	{
+		attackRange.push_back(TILE[mIndexY - 1][mIndexX - 1]);
+		attackRange.push_back(TILE[mIndexY - 1][mIndexX]);
+		attackRange.push_back(TILE[mIndexY - 1][mIndexX + 1]);
+		attackRange.push_back(TILE[mIndexY][mIndexX - 1]);
+		attackRange.push_back(TILE[mIndexY + 1][mIndexX - 1]);
+
+	}
+	else if (angle > 3 * PI / 4 and angle <= 5 * PI / 4) //좌측
+	{
+		attackRange.push_back(TILE[mIndexY - 1][mIndexX - 1]);
+		attackRange.push_back(TILE[mIndexY][mIndexX-1]);
+		attackRange.push_back(TILE[mIndexY +1][mIndexX - 1]);
+		attackRange.push_back(TILE[mIndexY+1][mIndexX]);
+		attackRange.push_back(TILE[mIndexY + 1][mIndexX + 1]);
+	}
+	else if(angle>5*PI/4 and angle<= 7*PI/4)//하방
+	{
+		attackRange.push_back(TILE[mIndexY + 1][mIndexX - 1]);
+		attackRange.push_back(TILE[mIndexY + 1][mIndexX]);
+		attackRange.push_back(TILE[mIndexY + 1][mIndexX + 1]);
+		attackRange.push_back(TILE[mIndexY][mIndexX + 1]);
+		attackRange.push_back(TILE[mIndexY-1][mIndexX + 1]);
 	}
 
 }

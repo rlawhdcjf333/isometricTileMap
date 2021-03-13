@@ -5,7 +5,7 @@ enum class TileType : int
 {
 	Normal = 1,
 	Block = 2,
-	Slow = 3
+	Slow = 3,
 };
 
 class Tile
@@ -30,6 +30,7 @@ public:
 	Tile(Image* pImage,  float x, float y, int frameX, int frameY, int sizeX, int sizeY, int indexX, int indexY);
 	void Render(HDC hdc);
 	void SelectRender(HDC hdc);
+	void SelectRenderBlue(HDC hdc);
 
 	Image* GetImage() { return mImage; }
 	void SetImage(Image* pImage) { mImage = pImage; }
@@ -51,9 +52,5 @@ public:
 	void SetType(TileType val) { mTileType = val; }
 	TileType GetType() { return mTileType; }
 
-	//HRGN GetRegion() 이거 작동이 너무 느림
-	//{ 
-	//	POINT points[4] = { mDiam.top, mDiam.right, mDiam.bottom, mDiam.left };
-	//	return CreatePolygonRgn(points, 4, ALTERNATE);
-	//}
+	
 };

@@ -28,3 +28,8 @@ void Tile::SelectRender(HDC hdc)
 {
 	Gizmo::GetInstance()->DrawRect(hdc, mRect, Gizmo::Color::Red);
 }
+
+void Tile::SelectRenderBlue(HDC hdc)
+{
+	Gizmo::GetInstance()->DrawRect(hdc, mRect, Gizmo::Color::Blue);
+}
