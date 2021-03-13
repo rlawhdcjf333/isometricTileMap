@@ -35,3 +35,8 @@ static ClassName* GetInstance()\
 protected: VarType VarName;\
 public: inline VarType Get##FuncName(void)const{return VarName;}\
 public: inline void Set##FuncName(VarType value){VarName = value;}
+
+//라디안
+#define radion(angle) angle/180.f * PI
+//디그리
+#define degree(angle) angle/PI *180.f

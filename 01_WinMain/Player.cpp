@@ -132,39 +132,79 @@ void Player::Dash(int dist)
 	if (INPUT->GetKeyDown(VK_SPACE))
 	{
 		mPath.clear();
-		float angle = Math::GetAngle(mX, mY, _mousePosition.x, _mousePosition.y);
+		float angle = Math::GetAngle(mX, mY, CAMERA->CameraMouseX(), CAMERA->CameraMouseY());
 		
 		if (angle >= PI2-(PI/8) or angle <(PI/8)) //우향 ->등축투영 가로 길이 보정때문에 대쉬 거리 조정
 		{
-			for (int i = 0; i < (dist+1)*2/3; i++) {mPath.push_back(TILE[mIndexY-i][mIndexX+i]);}
+			for (int i = 0; i < (dist+1)*2/3; i++) {
+				if (mIndexX + i < TILESizeX and mIndexY - i >= 0)
+				{
+					mPath.push_back(TILE[mIndexY - i][mIndexX + i]);
+				}
+			}
 		}
 		else if (angle >= (PI / 8) and angle < (3 * PI / 8)) //우상향
 		{
-			for (int i = 0; i < dist + 1; i++) { mPath.push_back(TILE[mIndexY - i][mIndexX]); }
+			for (int i = 0; i < dist + 1; i++) { 
+				if (mIndexY - i >= 0 and mIndexY - i < TILESizeY)
+				{
+					mPath.push_back(TILE[mIndexY - i][mIndexX]);
+				}
+			}
 		}
 		else if (angle >= (3 * PI / 8) and angle < (5 * PI / 8)) //상향
 		{
-			for (int i = 0; i < dist + 1; i++) { mPath.push_back(TILE[mIndexY-i][mIndexX-i]); }
+			for (int i = 0; i < dist + 1; i++) { 
+				if (mIndexX - i >= 0 and mIndexY - i >= 0)
+				{
+					mPath.push_back(TILE[mIndexY - i][mIndexX - i]);
+				}
+			}
 		}
 		else if (angle >= (5 * PI / 8) and angle < (7 * PI / 8)) //좌상향
 		{
-			for (int i = 0; i < dist + 1; i++) { mPath.push_back(TILE[mIndexY][mIndexX - i]); }
+			for (int i = 0; i < dist + 1; i++) {
+				if (mIndexX - i >= 0 )
+				{
+					mPath.push_back(TILE[mIndexY][mIndexX - i]);
+				}
+			}
 		}
 		else if (angle >= (7 * PI / 8) and angle < (9 * PI / 8)) //좌향  ->등축투영 가로 길이 보정때문에 대쉬거리 조정
 		{
-			for (int i = 0; i < (dist+1)*2/3; i++) { mPath.push_back(TILE[mIndexY+i][mIndexX - i]); }
+			for (int i = 0; i < (dist+1)*2/3; i++) {
+				if (mIndexX - i >= 0 and mIndexY + i < TILESizeY)
+				{
+					mPath.push_back(TILE[mIndexY + i][mIndexX - i]);
+				}
+			}
 		}
 		else if (angle >= (9 * PI / 8) and angle < (11 * PI / 8)) //좌하향
 		{
-			for (int i = 0; i < dist + 1; i++) { mPath.push_back(TILE[mIndexY + i][mIndexX]); }
+			for (int i = 0; i < dist + 1; i++) { 
+				if (mIndexY + i < TILESizeY)
+				{
+					mPath.push_back(TILE[mIndexY + i][mIndexX]);
+				}
+			}
 		}
 		else if (angle >= (11 * PI / 8) and angle < (13 * PI / 8)) //하향
 		{
-			for (int i = 0; i < dist + 1; i++) { mPath.push_back(TILE[mIndexY + i][mIndexX+i]); }
+			for (int i = 0; i < dist + 1; i++) { 
+				if (mIndexX + i < TILESizeX and mIndexY +i < TILESizeY)
+				{
+					mPath.push_back(TILE[mIndexY + i][mIndexX + i]);
+				}
+			}
 		}
 		else if (angle >= (13 * PI / 8) and angle < (15 * PI / 8)) //우하향
 		{
-			for (int i = 0; i < dist + 1; i++) { mPath.push_back(TILE[mIndexY][mIndexX + i]); }
+			for (int i = 0; i < dist + 1; i++) { 
+				if (mIndexX + i < TILESizeX)
+				{
+					mPath.push_back(TILE[mIndexY][mIndexX + i]);
+				}
+			}
 		}
 		
 		for (Tile* elem : mPath) //대쉬 경로에 막힌 길이 존재하면 막힌 타일 이전까지만 대쉬
@@ -185,7 +225,7 @@ void Player::Attack4Direction(vector<Tile*>& attackRange)
 {
 	attackRange.clear();
 
-	float angle = Math::GetAngle(mX, mY, _mousePosition.x, _mousePosition.y);
+	float angle = Math::GetAngle(mX, mY, CAMERA->CameraMouseX(), CAMERA->CameraMouseY());
 
 	if (angle > 7 * PI / 4 or angle <= PI / 4) //우측
 	{

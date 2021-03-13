@@ -145,3 +145,7 @@ bool Camera::IsInCameraArea(RECT rc)
 
 	return true;
 }
+
+
+LONG Camera::CameraMouseX() { return nonC_mousePosition.x + mRect.left; }
+LONG Camera::CameraMouseY() { return nonC_mousePosition.y + mRect.top; }

@@ -41,5 +41,7 @@ public:
 
 	inline float GetMoveSpeed()const { return mMoveSpeed; }
 	inline void SetMoveSpeed(float speed) { mMoveSpeed = speed; }
-};
 
+	LONG CameraMouseX();
+	LONG CameraMouseY();
+};
