@@ -94,7 +94,7 @@ void MapToolScene::Redo()
 
 void MapToolScene::Init()
 {
-	IMAGEMANAGER->LoadFromFile(L"Tiles", Resources(L"Tiles.bmp"), 372, 372, 3,6, true);
+	IMAGEMANAGER->LoadFromFile(L"Tiles", Resources(L"tile_test.bmp"), 372, 372, 3,6, true);
 	mImage = IMAGEMANAGER->FindImage(L"Tiles");
 
 	for (int y = 0; y < 75; y++)
@@ -110,8 +110,8 @@ void MapToolScene::Init()
 				mImage,
 				StartX+(x-y)*TileSizeX/2,
 				StartY+(x+y)*TileSizeY/2, 
-				2,
-				3,
+				0,
+				1,
 				TileSizeX,
 				TileSizeY,
 				x,
