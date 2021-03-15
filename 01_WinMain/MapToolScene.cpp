@@ -16,8 +16,6 @@ void MapToolScene::Save()
 	ofstream saveStream(L"../04_Data/Test.txt");
 	if (saveStream.is_open())
 	{
-	
-
 		for (int y = 0; y < mTileList.size(); ++y)
 		{
 			for (int x = 0; x < mTileList[y].size(); ++x)
@@ -145,11 +143,7 @@ void MapToolScene::Init()
 		}
 		mPalleteList.push_back(tmp);
 	}
-	mPalleteList[0][2]->SetType(TileType::Slow);
-	mPalleteList[0][3]->SetType(TileType::Slow);
-	mPalleteList[1][2]->SetType(TileType::Block);
-	mPalleteList[1][3]->SetType(TileType::Block);
-
+	mPalletRc = RectMake(900, 100, 5 * 50, 3 * 25);
 	mSave = new Button(L"저장", 150, 25, 200, 50, [this]() {Save();});
 	mLoad = new Button(L"불러오기", 360, 25, 200, 50, [this]() {Load();});
 	mUndo = new Button(L"되돌리기", 570, 25, 200, 50, [this]() {Undo();});
@@ -220,38 +214,51 @@ void MapToolScene::Update()
 		mCurrentTile = mTileList[y][x];
 	}
 
-	for (auto elem : mPalleteList)
+	if (INPUT->GetKeyDown(VK_TAB)) {
+		mTabKey = !mTabKey;
+	}
+	if (INPUT->GetKeyDown(VK_ESCAPE)) {
+		mRenderToggle = !mRenderToggle;
+	}
+	if (mCurrentPallete and INPUT->GetKeyDown(VK_RBUTTON))
 	{
-		for (auto elemelem : elem)
+		mCurrentPallete->SetType(TileType((int)mCurrentPallete->GetType() + 1));
+		if (mCurrentPallete->GetType() == TileType::End)
 		{
-			if (PtInRect(elemelem->GetRect(), nonC_mousePosition) and Input::GetInstance()->GetKeyUp(VK_LBUTTON))
-			{
-				mCurrentPallete = elemelem;
-			}
+			mCurrentPallete->SetType(TileType::Normal);
 		}
 	}
 
-	mSave->Update();
-	mLoad->Update();
-	mUndo->Update();
-	mRedo->Update();
-	mNext->Update();
-
+	if (!mTabKey) {
+		for (auto elem : mPalleteList)
+		{
+			for (auto elemelem : elem)
+			{
+				if (PtInRect(elemelem->GetRect(), nonC_mousePosition) and Input::GetInstance()->GetKeyUp(VK_LBUTTON))
+				{
+					mCurrentPallete = elemelem;
+				}
+			}
+		}
+		mSave->Update();
+		mLoad->Update();
+		mUndo->Update();
+		mRedo->Update();
+		mNext->Update();
+	}
 	if (mCurrentTile and mCurrentPallete)
 	{
-		if (Input::GetInstance()->GetKey(VK_LBUTTON))
+		if (!PtInRect(&mPalletRc, nonC_mousePosition) and Input::GetInstance()->GetKey(VK_LBUTTON))
 		{
 			if (mCurrentTile->GetImage() != mCurrentPallete->GetImage() or
 				mCurrentTile->GetFrameX() != mCurrentPallete->GetFrameX() or
-				mCurrentTile ->GetFrameY() != mCurrentPallete->GetFrameY())
+				mCurrentTile->GetFrameY() != mCurrentPallete->GetFrameY())
 			{
 				IBrushHandle* command = new IBrushHandle(mCurrentTile, mCurrentPallete);
 				RegisterCommand(command);
 			}
 		}
 	}
-
-
 }
 
 void MapToolScene::Render(HDC hdc)
@@ -261,6 +268,9 @@ void MapToolScene::Render(HDC hdc)
 		for (int x = 0; x < mTileList[y].size(); x++)
 		{
 			mTileList[y][x]->Render(hdc);
+			if (!mRenderToggle) {
+				mTileList[y][x]->SelectRenderMargenta(hdc);
+			}
 		}
 	}
 
@@ -268,24 +278,26 @@ void MapToolScene::Render(HDC hdc)
 	{
 		mCurrentTile->SelectRender(hdc);
 	}
-
-	mSave->Render(hdc);
-	mLoad->Render(hdc);
-	mUndo->Render(hdc);
-	mRedo->Render(hdc);
-	mNext->Render(hdc);
-
-	for (int y = 0; y < mPalleteList.size(); y++)
-	{
-		for (int x = 0; x< mPalleteList[y].size();x++)
-		{
-			mPalleteList[y][x]->Render(hdc);
-		}
-	}
-
 	if (mCurrentPallete)
 	{
 		mCurrentPallete->Render(hdc, _mousePosition.x - 25, _mousePosition.y - 12);
+		int currenttype = (int)mCurrentPallete->GetType();
+		TextOut(hdc, 50, 50, to_wstring(currenttype).c_str(), 1);
 	}
+	if (!mTabKey) {
+		mSave->Render(hdc);
+		mLoad->Render(hdc);
+		mUndo->Render(hdc);
+		mRedo->Render(hdc);
+		mNext->Render(hdc);
 
+		for (int y = 0; y < mPalleteList.size(); y++)
+		{
+			for (int x = 0; x < mPalleteList[y].size(); x++)
+			{
+				mPalleteList[y][x]->Render(hdc);
+			}
+		}
+		
+	}
 }

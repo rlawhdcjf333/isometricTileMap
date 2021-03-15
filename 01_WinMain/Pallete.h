@@ -14,8 +14,6 @@ class Pallete
 
 	RECT mRect;
 	TileType mTileType;
-	
-
 public:
 	Pallete(Image* pImage, float x, float y, int frameX, int frameY, float sizeX, float sizeY);
 	void Render(HDC hdc);

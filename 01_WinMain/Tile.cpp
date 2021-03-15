@@ -18,6 +18,8 @@ void Tile::Render(HDC hdc)
 	{
 		CAMERA->ScaleFrameRender(hdc, mImage, mX, mY, mFrameX, mFrameY, mSizeX, mSizeY);
 		//mImage->ScaleFrameRender(hdc, mX, mY, mFrameX, mFrameY, mSizeX, mSizeY);
+		
+			
 	}
 	else
 	{
@@ -41,4 +43,11 @@ void Tile::SelectRender(HDC hdc)
 void Tile::SelectRenderBlue(HDC hdc)
 {
 	Gizmo::GetInstance()->DrawRect(hdc, mRect, Gizmo::Color::Blue);
+}
+
+void Tile::SelectRenderMargenta(HDC hdc)
+{
+	if (mTileType != TileType::Normal) {
+		Gizmo::GetInstance()->DrawDiam(hdc, mDiam, Gizmo::Color::Margenta);
+	}
 }

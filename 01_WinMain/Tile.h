@@ -7,6 +7,7 @@ enum class TileType : int
 	Normal = 1,
 	Block = 2,
 	Slow = 3,
+	End = 4
 };
 
 class Tile
@@ -37,6 +38,7 @@ public:
 	void Render(HDC hdc);
 	void SelectRender(HDC hdc);
 	void SelectRenderBlue(HDC hdc);
+	void SelectRenderMargenta(HDC hdc);
 
 	Image* GetImage() { return mImage; }
 	void SetImage(Image* pImage) { mImage = pImage; }

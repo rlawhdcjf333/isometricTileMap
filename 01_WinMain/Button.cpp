@@ -35,7 +35,6 @@ void Button::Update()
 				mFunc();
 			}
 		}
-
 	}
 }
 

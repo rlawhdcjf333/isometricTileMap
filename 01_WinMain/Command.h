@@ -19,6 +19,7 @@ class IBrushHandle :public ICommand
 	int mTargetFrameX;
 	int mTargetFrameY;
 	
+	TileType mCurrentType;
 	TileType mTargetType;
 
 public:

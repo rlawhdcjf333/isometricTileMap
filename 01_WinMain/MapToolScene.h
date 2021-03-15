@@ -23,8 +23,10 @@ class MapToolScene  : public Scene
 
 	stack <ICommand*>  mCommandList;
 	stack <ICommand*> mRedoList;
+	RECT mPalletRc;
 
-
+	bool mTabKey = false;
+	bool mRenderToggle = false;
 private:
 	
 	void RegisterCommand(ICommand* command);
