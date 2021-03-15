@@ -86,7 +86,7 @@ bool Image::LoadFromFile(wstring keyName,wstring fileName, int width, int height
 	{
 		ReleaseBuffer();
 	}
-
+	
 	HDC hdc = GetDC(_hWnd);
 
 	mImageBuffer = new ImageBuffer();
@@ -119,7 +119,7 @@ bool Image::LoadFromFile(wstring keyName,wstring fileName, int width, int height
 
 	mIsTrans = isTrans;
 	mTransColor = transColor;
-
+	mIsFrameImage = false;
 	if (mImageBuffer->bitmap == nullptr)
 	{
 		ReleaseBuffer();
@@ -177,7 +177,7 @@ bool Image::LoadFromFile(wstring keyName, wstring fileName, int width, int heigh
 	mKeyName = keyName;
 	mIsTrans = isTrans;
 	mTransColor = transColor;
-
+	mIsFrameImage = true;
 	if (mImageBuffer->bitmap == nullptr)
 	{
 		ReleaseBuffer();

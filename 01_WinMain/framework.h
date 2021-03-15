@@ -47,6 +47,7 @@ using namespace std;
 #include "Image.h"
 #include "TileList.h"
 #include "PathFinder.h"
+#include "Tile.h"
 
 //#ifdef UNICODE
 //#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")

@@ -149,10 +149,12 @@
   <ItemGroup>
     <ClInclude Include="01_WinMain.h" />
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="DefineHeader.h" />
+    <ClInclude Include="Dumb.h" />
     <ClInclude Include="Figure.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GameEvent.h" />
@@ -162,6 +164,7 @@
     <ClInclude Include="Image.h" />
     <ClInclude Include="ImageManager.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="IntersectManager.h" />
     <ClInclude Include="LoadingScene.h" />
     <ClInclude Include="MainGame.h" />
     <ClInclude Include="Math.h" />
@@ -187,10 +190,12 @@
   <ItemGroup>
     <ClCompile Include="01_WinMain.cpp" />
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="Command.cpp" />
+    <ClCompile Include="Dumb.cpp" />
     <ClCompile Include="GameEvent.cpp" />
     <ClCompile Include="GameEventManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -198,6 +203,7 @@
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="ImageManager.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="IntersectManager.cpp" />
     <ClCompile Include="LoadingScene.cpp" />
     <ClCompile Include="MainGame + MainProc.cpp" />
     <ClCompile Include="MainGame.cpp" />

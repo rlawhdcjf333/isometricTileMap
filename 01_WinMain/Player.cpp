@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Player.h"
 #include "TileSelect.h"
+#include "Bullet.h"
 
 Player::Player(int indexX, int indexY, float sizeX, float sizeY)
 	:GameObject("Player"), mTime(0), mFrameX(0)  
@@ -46,7 +47,18 @@ void Player::Update()
 
 	if (INPUT->GetKeyDown('D'))
 	{
-		Attack4Direction(mAttackRange);
+		Attack(1,2,AttackType::Whirlwind);
+	}
+	if (INPUT->GetKeyDown('A'))
+	{
+		Attack(1, 2, AttackType::Side);
+	}
+	if (INPUT->GetKeyDown('S'))
+	{
+		Attack(1, 2, AttackType::Stab);
+	}
+	if (INPUT->GetKeyDown('F')) {
+		Attack(1, 300, AttackType::RangedAttack);
 	}
 
 	Dash(5);
@@ -62,7 +74,6 @@ void Player::Update()
 			if (PathFinder::GetInstance()->FindPath(TILE, mPath, mIndexX, mIndexY,
 				mTileSelect->GetIndexX(), mTileSelect->GetIndexY())) mPathIndex = 1;
 		}
-
 		Move(mSpeed);
 	}
 
@@ -87,11 +98,6 @@ void Player::Render(HDC hdc)
 	for (Tile* elem : mPath)
 	{
 		elem->SelectRender(hdc);
-	}
-
-	for (Tile* elem : mAttackRange)
-	{
-		elem->SelectRenderBlue(hdc);
 	}
 	//}}
 }
@@ -221,44 +227,150 @@ void Player::Dash(int dist)
 
 }
 
-void Player::Attack4Direction(vector<Tile*>& attackRange)
+void Player::Attack(int damage, int range, AttackType type)
 {
-	attackRange.clear();
-
 	float angle = Math::GetAngle(mX, mY, CAMERA->CameraMouseX(), CAMERA->CameraMouseY());
 
-	if (angle > 7 * PI / 4 or angle <= PI / 4) //우측
-	{
-		attackRange.push_back(TILE[mIndexY - 1][mIndexX - 1]);
-		attackRange.push_back(TILE[mIndexY - 1][mIndexX]);
-		attackRange.push_back(TILE[mIndexY - 1][mIndexX + 1]);
-		attackRange.push_back(TILE[mIndexY][mIndexX + 1]);
-		attackRange.push_back(TILE[mIndexY + 1][mIndexX + 1]);
-	}
-	else if (angle > PI / 4 and angle <= 3 * PI / 4) //상방
-	{
-		attackRange.push_back(TILE[mIndexY - 1][mIndexX - 1]);
-		attackRange.push_back(TILE[mIndexY - 1][mIndexX]);
-		attackRange.push_back(TILE[mIndexY - 1][mIndexX + 1]);
-		attackRange.push_back(TILE[mIndexY][mIndexX - 1]);
-		attackRange.push_back(TILE[mIndexY + 1][mIndexX - 1]);
+	switch (type) {
+		case AttackType::Side:
+		if (angle > 7 * PI / 4 or angle <= PI / 4) //우측
+		{
+			TILE[mIndexY - 1][mIndexX - 1]->AttackDamage(damage);
+			TILE[mIndexY - 1][mIndexX]->AttackDamage(damage);
+			TILE[mIndexY - 1][mIndexX + 1]->AttackDamage(damage);
+			TILE[mIndexY][mIndexX + 1]->AttackDamage(damage);
+			TILE[mIndexY + 1][mIndexX + 1]->AttackDamage(damage);
+		}
+		else if (angle > PI / 4 and angle <= 3 * PI / 4) //상방
+		{
+			TILE[mIndexY - 1][mIndexX - 1]->AttackDamage(damage);
+			TILE[mIndexY - 1][mIndexX]->AttackDamage(damage);
+			TILE[mIndexY - 1][mIndexX + 1]->AttackDamage(damage);
+			TILE[mIndexY][mIndexX - 1]->AttackDamage(damage);
+			TILE[mIndexY + 1][mIndexX - 1]->AttackDamage(damage);
 
-	}
-	else if (angle > 3 * PI / 4 and angle <= 5 * PI / 4) //좌측
-	{
-		attackRange.push_back(TILE[mIndexY - 1][mIndexX - 1]);
-		attackRange.push_back(TILE[mIndexY][mIndexX-1]);
-		attackRange.push_back(TILE[mIndexY +1][mIndexX - 1]);
-		attackRange.push_back(TILE[mIndexY+1][mIndexX]);
-		attackRange.push_back(TILE[mIndexY + 1][mIndexX + 1]);
-	}
-	else if(angle>5*PI/4 and angle<= 7*PI/4)//하방
-	{
-		attackRange.push_back(TILE[mIndexY + 1][mIndexX - 1]);
-		attackRange.push_back(TILE[mIndexY + 1][mIndexX]);
-		attackRange.push_back(TILE[mIndexY + 1][mIndexX + 1]);
-		attackRange.push_back(TILE[mIndexY][mIndexX + 1]);
-		attackRange.push_back(TILE[mIndexY-1][mIndexX + 1]);
-	}
+		}
+		else if (angle > 3 * PI / 4 and angle <= 5 * PI / 4) //좌측
+		{
+			TILE[mIndexY - 1][mIndexX - 1]->AttackDamage(damage);
+			TILE[mIndexY][mIndexX - 1]->AttackDamage(damage);
+			TILE[mIndexY + 1][mIndexX - 1]->AttackDamage(damage);
+			TILE[mIndexY + 1][mIndexX]->AttackDamage(damage);
+			TILE[mIndexY + 1][mIndexX + 1]->AttackDamage(damage);
+		}
+		else if (angle > 5 * PI / 4 and angle <= 7 * PI / 4)//하방
+		{
+			TILE[mIndexY + 1][mIndexX - 1]->AttackDamage(damage);
+			TILE[mIndexY + 1][mIndexX]->AttackDamage(damage);
+			TILE[mIndexY + 1][mIndexX + 1]->AttackDamage(damage);
+			TILE[mIndexY][mIndexX + 1]->AttackDamage(damage);
+			TILE[mIndexY - 1][mIndexX + 1]->AttackDamage(damage);
+		}
+		break;
 
+		case AttackType::Stab:
+		if (angle >= PI2 - (PI / 8) or angle < (PI / 8)) //우향 ->등축투영 가로 길이 보정때문에 대쉬 거리 조정
+		{
+			for (int i = 0; i < range + 1; i++) {
+				if (mIndexX + i < TILESizeX and mIndexY - i >= 0)
+				{
+					if (TILE[mIndexY - i][mIndexX + i]->GetType() == TileType::Block)
+						break;
+					TILE[mIndexY - i][mIndexX + i]->AttackDamage(damage);
+				}
+			}
+		}
+		else if (angle >= (PI / 8) and angle < (3 * PI / 8)) //우상향
+		{
+			for (int i = 0; i < range + 1; i++) {
+				if (mIndexY - i >= 0 and mIndexY - i < TILESizeY)
+				{
+					if (TILE[mIndexY - i][mIndexX]->GetType() == TileType::Block)
+						break;
+					TILE[mIndexY - i][mIndexX]->AttackDamage(damage);
+				}
+			}
+		}
+		else if (angle >= (3 * PI / 8) and angle < (5 * PI / 8)) //상향
+		{
+			for (int i = 0; i < range + 1; i++) {
+				if (mIndexX - i >= 0 and mIndexY - i >= 0)
+				{
+					if (TILE[mIndexY - i][mIndexX - i]->GetType() == TileType::Block)
+						break;
+					TILE[mIndexY - i][mIndexX - i]->AttackDamage(damage);
+				}
+			}
+		}
+		else if (angle >= (5 * PI / 8) and angle < (7 * PI / 8)) //좌상향
+		{
+			for (int i = 0; i < range + 1; i++) {
+				if (mIndexX - i >= 0)
+				{
+					if (TILE[mIndexY][mIndexX - i]->GetType() == TileType::Block)
+						break;
+					TILE[mIndexY][mIndexX - i]->AttackDamage(damage);
+				}
+			}
+		}
+		else if (angle >= (7 * PI / 8) and angle < (9 * PI / 8)) //좌향  ->등축투영 가로 길이 보정때문에 대쉬거리 조정
+		{
+			for (int i = 0; i < range + 1; i++) {
+				if (mIndexX - i >= 0 and mIndexY + i < TILESizeY)
+				{
+					if (TILE[mIndexY + i][mIndexX - i]->GetType() == TileType::Block)
+						break;
+					TILE[mIndexY + i][mIndexX - i]->AttackDamage(damage);
+				}
+			}
+		}
+		else if (angle >= (9 * PI / 8) and angle < (11 * PI / 8)) //좌하향
+		{
+			for (int i = 0; i < range + 1; i++) {
+				if (mIndexY + i < TILESizeY)
+				{
+					if (TILE[mIndexY + i][mIndexX]->GetType() == TileType::Block)
+						break;
+					TILE[mIndexY + i][mIndexX]->AttackDamage(damage);
+				}
+			}
+		}
+		else if (angle >= (11 * PI / 8) and angle < (13 * PI / 8)) //하향
+		{
+			for (int i = 0; i < range + 1; i++) {
+				if (mIndexX + i < TILESizeX and mIndexY + i < TILESizeY)
+				{
+					if (TILE[mIndexY + i][mIndexX + i]->GetType() == TileType::Block)
+						break;
+					TILE[mIndexY + i][mIndexX + i]->AttackDamage(damage);
+				}
+			}
+		}
+		else if (angle >= (13 * PI / 8) and angle < (15 * PI / 8)) //우하향
+		{
+			for (int i = 0; i < range + 1; i++) {
+				if (mIndexX + i < TILESizeX)
+				{
+					if (TILE[mIndexY][mIndexX + i]->GetType() == TileType::Block)
+						break;
+					TILE[mIndexY][mIndexX + i]->AttackDamage(damage);
+				}
+			}
+		}
+		break;
+
+		case AttackType::Whirlwind:
+		for (int y = mIndexY - range; y < mIndexY + range; y++) {
+			for (int x = mIndexX - range; x < mIndexX + range; x++) {
+				if (y <=0 || y>TILESizeY || x<=0 || x>TILESizeX) {
+						continue;
+				}
+				TILE[y][x]->AttackDamage(damage);
+			}
+		}
+		break;
+		case AttackType::RangedAttack:
+			new Bullet(nullptr,"Bullet",this,damage,300,range,angle,BulletType::Straight);
+		break;
+	}
 }

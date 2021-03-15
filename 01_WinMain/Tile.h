@@ -1,6 +1,7 @@
 #pragma once
 
 class Image;
+class GameObject;
 enum class TileType : int
 {
 	Normal = 1,
@@ -23,7 +24,12 @@ class Tile
 	RECT mRect;
 	Diam mDiam;
 	TileType mTileType;
+	bool mAttackTest = false;
+	int mTestTime= 0;
 
+
+	bool mOccupied;
+	GameObject* mObject;
 
 public:
 
@@ -45,12 +51,17 @@ public:
 	int GetIndexX() { return mIndexX; }
 	int GetIndexY() { return mIndexY; }
 
-
 	float GetX() { return mX; }
 	float GetY() { return mY; }
 
+	void SetObject(GameObject* object) { mObject = object;}
 	void SetType(TileType val) { mTileType = val; }
 	TileType GetType() { return mTileType; }
 
-	
+	void AttackDamage(int damage) {
+		if (mObject != nullptr) {
+			mObject->Damage(damage);
+		}
+		mAttackTest = true;
+	}
 };

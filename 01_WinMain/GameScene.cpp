@@ -2,19 +2,21 @@
 #include "GameScene.h"
 #include "Player.h"
 #include "Tile.h"
-
+#include "Dumb.h"
 void GameScene::Init()
 {
 	MapLoad();
 	mPlayer = new Player(30,30, 30,30);
 	mPlayer->Init();
-
+	
+	ObjectManager::GetInstance()->AddObject(ObjectLayer::Enemy,new Dumb());
 	CAMERA->ChangeMode(Camera::Mode::Follow);
 	CAMERA->SetTarget(mPlayer);
 }
 
 void GameScene::Update()
 {
+	ObjectManager::GetInstance()->Update();
 	mPlayer->Update();
 }
 
@@ -33,6 +35,7 @@ void GameScene::Render(HDC hdc)
 
 	SetBkMode(hdc, TRANSPARENT);
 	TextOut(hdc, 800, 100, L"이동: 우클릭, 꾹 누르고 있어도 됨.", 21);
+	ObjectManager::GetInstance()->Render(hdc);
 }
 
 void GameScene::Release()

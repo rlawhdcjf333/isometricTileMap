@@ -3,6 +3,7 @@
 
 LRESULT MainGame::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 {
+	
 	switch (iMessage)
 	{
 	case WM_DESTROY:

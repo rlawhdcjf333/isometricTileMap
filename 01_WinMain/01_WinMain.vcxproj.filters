@@ -85,6 +85,18 @@
     <Filter Include="FrameWork\PathFinder">
       <UniqueIdentifier>{114223ba-8055-4022-99d6-29f3955b4ba7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MainGame\enemy">
+      <UniqueIdentifier>{c1602ba9-5f75-4b28-b0e3-ffbbf95c772c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FrameWork\Attack">
+      <UniqueIdentifier>{579bba90-d556-4152-b613-9cb02a34fa58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MainGame\bullet">
+      <UniqueIdentifier>{493a20c4-12e7-457c-81e2-ab710e3dafe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FrameWork\IntersectManager">
+      <UniqueIdentifier>{8bb2f411-1966-4db9-95f2-18e775b8c97f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -195,6 +207,15 @@
     <ClInclude Include="PathFinder.h">
       <Filter>FrameWork\PathFinder</Filter>
     </ClInclude>
+    <ClInclude Include="Dumb.h">
+      <Filter>MainGame\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>MainGame\bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="IntersectManager.h">
+      <Filter>FrameWork\IntersectManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="01_WinMain.cpp">
@@ -292,6 +313,15 @@
     </ClCompile>
     <ClCompile Include="PathFinder.cpp">
       <Filter>FrameWork\PathFinder</Filter>
+    </ClCompile>
+    <ClCompile Include="Dumb.cpp">
+      <Filter>MainGame\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>MainGame\bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="IntersectManager.cpp">
+      <Filter>FrameWork\IntersectManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

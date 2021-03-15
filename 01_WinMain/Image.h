@@ -32,6 +32,7 @@ private:
 	wstring mFileName;
 	wstring mKeyName;
 	bool mIsTrans;
+	bool mIsFrameImage;
 	COLORREF mTransColor;
 
 	ImageBuffer* mBlendImageBuffer;
@@ -72,6 +73,7 @@ public:// 접근 관련~
 	inline int GetFrameHeight()const { return mImageBuffer->frameHeight; }
 	inline int GetWidth()const { return mImageBuffer->width; }
 	inline int GetHeight()const { return mImageBuffer->height; }
+	inline bool GetIsFrameImage()const { return mIsFrameImage; }
 	inline wstring GetKeyName()const { return mKeyName; }
 };
 

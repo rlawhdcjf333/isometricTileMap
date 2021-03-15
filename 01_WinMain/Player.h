@@ -1,6 +1,11 @@
 #pragma once
 #include "GameObject.h"
-
+enum class AttackType : int {
+	Side= 1,
+	Stab,
+	Whirlwind,
+	RangedAttack
+};
 class TileSelect;
 class Tile;
 class Player : public GameObject
@@ -8,15 +13,11 @@ class Player : public GameObject
 	Image* mImage;
 	TileSelect* mTileSelect;
 	vector<Tile*> mPath;
-	vector<Tile*> mAttackRange;
 	float mSpeed;
 	float mInitSpeed;
 	float mAngle;
 	float mTime;
 	int mFrameX;
-
-	int mIndexX;
-	int mIndexY;
 
 	bool mIsDash;
 	int mPathIndex = 0;
@@ -31,5 +32,5 @@ public:
 
 	void Move(float speed);
 	void Dash(int dist);
-	void Attack4Direction(vector<Tile*>& attackRange);
+	void Attack(int damage, int range, AttackType type);
 };

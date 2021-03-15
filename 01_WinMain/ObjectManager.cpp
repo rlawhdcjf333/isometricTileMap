@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "ObjectManager.h"
-
+#include "Bullet.h"
 #include "GameObject.h"
 ObjectManager::ObjectManager()
 {
@@ -57,6 +57,7 @@ void ObjectManager::Update()
 			}
 		}
 	}
+	IntersectObject();
 }
 
 void ObjectManager::Render(HDC hdc)
@@ -69,6 +70,26 @@ void ObjectManager::Render(HDC hdc)
 			if (iter->second[i]->GetIsActive() == true)
 			{
 				iter->second[i]->Render(hdc);
+			}
+		}
+	}
+}
+
+void ObjectManager::IntersectObject()
+{
+	RECT tmp;
+
+	for (GameObject* elem : mObjectList[ObjectLayer::Player_Bullet])
+	{
+		for (GameObject* elemelem : mObjectList[ObjectLayer::Enemy])
+		{
+
+			RECT playerBullet = elem->GetRect();
+			RECT enemy = elemelem->GetRect();
+			if (IntersectRect(&tmp, &playerBullet, &enemy))
+			{
+				elemelem->Damage(elem->GetDamage());
+				elem->Damage(0);
 			}
 		}
 	}

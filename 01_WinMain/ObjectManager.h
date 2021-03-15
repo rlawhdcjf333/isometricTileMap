@@ -10,8 +10,10 @@ enum class ObjectLayer : int
 {
 	Background = 0, 
 	Player = 1,
-	Enemey = 2,
+	Enemy = 2,
 	UI = 3,
+	Player_Bullet = 4,
+	Enemy_Bullet,
 	End
 };
 
@@ -29,11 +31,13 @@ public:
 	void Update();
 	void Render(HDC hdc);
 
+	void IntersectObject();
 	void AddObject(ObjectLayer layer, class GameObject* object);
 	class GameObject* FindObject(const string& name);
 	class GameObject* FindObject(ObjectLayer layer, const string& name);
 	vector<class GameObject*> FindObjects(const string& name);
 	vector<class GameObject*> FindObjects(ObjectLayer layer, const string& name);
 	vector<class GameObject*> GetObjectList(ObjectLayer layer);
+
 };
 
