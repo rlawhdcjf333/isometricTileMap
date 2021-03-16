@@ -252,7 +252,8 @@ void MapToolScene::Update()
 		{
 			if (mCurrentTile->GetImage() != mCurrentPallete->GetImage() or
 				mCurrentTile->GetFrameX() != mCurrentPallete->GetFrameX() or
-				mCurrentTile->GetFrameY() != mCurrentPallete->GetFrameY())
+				mCurrentTile->GetFrameY() != mCurrentPallete->GetFrameY() or
+				mCurrentTile->GetType() != mCurrentPallete->GetType())
 			{
 				IBrushHandle* command = new IBrushHandle(mCurrentTile, mCurrentPallete);
 				RegisterCommand(command);
