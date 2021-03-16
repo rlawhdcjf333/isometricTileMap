@@ -163,14 +163,14 @@ void MapToolScene::ChangeLayer()
 void MapToolScene::Init()
 {
 	IMAGEMANAGER->LoadFromFile(L"Tiles", Resources(L"tile_test.bmp"), 372, 372, 3,6, true);
+	IMAGEMANAGER->LoadFromFile(L"ForestObject", Resources(L"forestObject.bmp"), 360, 300, 3, 5, true);
 	mImage = IMAGEMANAGER->FindImage(L"Tiles");
 
-	for (int y = 0; y < 75; y++)
+	for (int y = 0; y < 75; y++) // 타일 레이어 도화지
 	{
 		vector <Tile*> tmp;
 		for (int x = 0; x < 75; x++)
 		{
-			//회전 축변환... 생각해보면 별거없다 
 			tmp.push_back
 			( 
 				new Tile
@@ -189,12 +189,11 @@ void MapToolScene::Init()
 		}
 		mTileList.push_back(tmp);
 	}
-	for (int y = 0; y < 75; y++)
+	for (int y = 0; y < 75; y++) // 오브젝트 레이어 도화지
 	{
 		vector <Tile*> tmp;
 		for (int x = 0; x < 75; x++)
 		{
-			//회전 축변환... 생각해보면 별거없다 
 			tmp.push_back
 			(
 				new Tile
@@ -213,7 +212,7 @@ void MapToolScene::Init()
 		}
 		mObjectList.push_back(tmp);
 	}
-	for (int y = 0; y < 3; y++)
+	for (int y = 0; y < 3; y++) //타일 팔레트
 	{
 		vector <Pallete*> tmp;
 		for (int x = 0; x < 5; x++)
@@ -233,6 +232,27 @@ void MapToolScene::Init()
 		}
 		mPalleteList.push_back(tmp);
 	}
+	for (int y = 0; y < 3; y++) //오브젝트 팔레트
+	{
+		vector <Pallete*> tmp;
+		for (int x = 0; x < 5; x++)
+		{
+			tmp.push_back(
+				new Pallete
+				(
+					IMAGEMANAGER->FindImage(L"ForestObject"),
+					900 + 50 * x,
+					100 + 25 * y,
+					y,
+					x,
+					50,
+					25
+				)
+			);
+		}
+		mObjectPalleteList.push_back(tmp);
+	}
+
 	mPalletRc = RectMake(900, 100, 5 * 50, 3 * 25);
 	mSave = new Button(L"저장", 150, 25, 200, 50, [this]() {Save();});
 	mLoad = new Button(L"불러오기", 360, 25, 200, 50, [this]() {Load();});
@@ -240,6 +260,7 @@ void MapToolScene::Init()
 	mRedo = new Button(L"되돌리기 취소", 780, 25, 200, 50, [this]() {Redo();});
 	mNext = new Button(L"게임로드", 990, 25, 200, 50, []() {SceneManager::GetInstance()->LoadScene(L"GameScene");});
 	mChangeLayer = new Button(L"레이어 변경", 150, 80, 200, 50, [this]() {ChangeLayer(); });
+
 	CameraManager::GetInstance()->GetMainCamera()->ChangeMode(Camera::Mode::Free);
 	CAMERA->SetX(StartX);
 	CAMERA->SetY(StartY);
@@ -271,6 +292,13 @@ void MapToolScene::Release()
 			SafeDelete(mPalleteList[y][x]);
 		}
 	}
+	for (int y = 0; y < mObjectPalleteList.size(); y++)
+	{
+		for (int x = 0; x < mObjectPalleteList[y].size(); x++)
+		{
+			SafeDelete(mObjectPalleteList[y][x]);
+		}
+	}
 
 	while (!mCommandList.empty())
 	{
@@ -290,8 +318,8 @@ void MapToolScene::Release()
 	SafeDelete(mLoad);
 	SafeDelete(mUndo);
 	SafeDelete(mRedo);
-	SafeDelete(mNext);
 	SafeDelete(mChangeLayer);
+	SafeDelete(mNext);
 }
 
 void MapToolScene::Update()
@@ -346,22 +374,41 @@ void MapToolScene::Update()
 		}
 	}
 	if (!mTabKey) {
-		for (auto elem : mPalleteList)
+		if (mIsLayer == Layer::Tile)
 		{
-			for (auto elemelem : elem)
+			for (auto elem : mPalleteList)
 			{
-				if (PtInRect(elemelem->GetRect(), nonC_mousePosition) and Input::GetInstance()->GetKeyUp(VK_LBUTTON))
+				for (auto elemelem : elem)
 				{
-					mCurrentPallete = elemelem;
+					if (PtInRect(elemelem->GetRect(), nonC_mousePosition) and Input::GetInstance()->GetKeyUp(VK_LBUTTON))
+					{
+						mCurrentPallete = elemelem;
+					}
 				}
 			}
 		}
+		else if (mIsLayer == Layer::Object)
+		{
+			for (auto elem : mObjectPalleteList)
+			{
+				for (auto elemelem : elem)
+				{
+					if (PtInRect(elemelem->GetRect(), nonC_mousePosition) and Input::GetInstance()->GetKeyUp(VK_LBUTTON))
+					{
+						mCurrentPallete = elemelem;
+					}
+				}
+			}
+		
+		}
+
 		mSave->Update();
 		mLoad->Update();
 		mUndo->Update();
 		mRedo->Update();
 		mChangeLayer->Update();
 		mNext->Update();
+
 	}
 }
 
@@ -425,13 +472,25 @@ void MapToolScene::Render(HDC hdc)
 		mNext->Render(hdc);
 		mChangeLayer->Render(hdc);
 
-		for (int y = 0; y < mPalleteList.size(); y++)
+		if (mIsLayer == Layer::Tile)
 		{
-			for (int x = 0; x < mPalleteList[y].size(); x++)
+			for (int y = 0; y < mPalleteList.size(); y++)
 			{
-				mPalleteList[y][x]->Render(hdc);
+				for (int x = 0; x < mPalleteList[y].size(); x++)
+				{
+					mPalleteList[y][x]->Render(hdc);
+				}
 			}
 		}
-		
+		else if (mIsLayer == Layer::Object)
+		{
+			for (int y = 0; y < mObjectPalleteList.size(); y++)
+			{
+				for (int x = 0; x < mObjectPalleteList[y].size(); x++)
+				{
+					mObjectPalleteList[y][x]->Render(hdc);
+				}
+			}
+		}
 	}
 }

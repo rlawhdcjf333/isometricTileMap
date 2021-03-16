@@ -16,10 +16,10 @@ class MapToolScene  : public Scene
 	vector <vector<Tile*>> mTileList;
 	vector <vector<Tile*>> mObjectList;
 	vector <vector<Pallete*>> mPalleteList;
+	vector <vector<Pallete*>> mObjectPalleteList;
 
 	Tile* mCurrentTile;
 	Pallete* mCurrentPallete;
-	
 
 	Button* mSave;
 	Button* mLoad;
