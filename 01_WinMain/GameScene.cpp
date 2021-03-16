@@ -78,7 +78,7 @@ void GameScene:: MapLoad()
 		mTileList.push_back(tmp);
 	}
 
-	ifstream loadStream(L"../04_Data/Test.txt");
+	ifstream loadStream(L"../04_Data/Tile.txt");
 	if (loadStream.is_open())
 	{
 		for (int y = 0; y < mTileList.size(); ++y)

@@ -7,6 +7,7 @@ Tile::Tile(Image* pImage, float x, float y, int frameX, int frameY, int sizeX, i
 	:mX(x), mY(y), mFrameX(frameX), mFrameY(frameY), mSizeX(sizeX), mSizeY(sizeY), mImage(pImage), mIndexX(indexX), mIndexY(indexY), mObject(nullptr), mOccupied(false)
 {
 	mTileType = TileType::Normal;
+
 	mRect = RectMake(mX, mY, mSizeX, mSizeY);
 	mDiam = DiamMake(mX, mY, mSizeX, mSizeY);
 }
