@@ -418,7 +418,12 @@ void MapToolScene::Render(HDC hdc)
 	{
 		for (int x = 0; x < mTileList[y].size(); x++)
 		{
-			mTileList[y][x]->Render(hdc);
+			if (mIsLayer == Layer::Tile) {
+				mTileList[y][x]->Render(hdc);
+			}
+			else {
+				mTileList[y][x]->AlphaRender(hdc);
+			}
 			if (!mRenderToggle) {
 				mTileList[y][x]->SelectRenderMargenta(hdc);
 			}
@@ -428,7 +433,12 @@ void MapToolScene::Render(HDC hdc)
 	{
 		for (int x = 0; x < mObjectList[y].size(); x++)
 		{
-			mObjectList[y][x]->Render(hdc);
+			if (mIsLayer == Layer::Object) {
+				mObjectList[y][x]->Render(hdc);
+			}
+			else {
+				mObjectList[y][x]->AlphaRender(hdc);
+			}
 			if (!mRenderToggle) {
 				mObjectList[y][x]->SelectRenderMargenta(hdc);
 			}

@@ -4,7 +4,7 @@
 #include "GameObject.h"
 
 Tile::Tile(Image* pImage, float x, float y, int frameX, int frameY, int sizeX, int sizeY, int indexX, int indexY)
-	:mX(x), mY(y), mFrameX(frameX), mFrameY(frameY), mSizeX(sizeX), mSizeY(sizeY), mImage(pImage), mIndexX(indexX), mIndexY(indexY), mObject(nullptr), mOccupied(false)
+	:mX(x), mY(y), mFrameX(frameX), mFrameY(frameY), mSizeX(sizeX), mSizeY(sizeY), mImage(pImage), mIndexX(indexX), mIndexY(indexY), mObject(nullptr)
 {
 	mTileType = TileType::Normal;
 
@@ -21,6 +21,26 @@ void Tile::Render(HDC hdc)
 		//mImage->ScaleFrameRender(hdc, mX, mY, mFrameX, mFrameY, mSizeX, mSizeY);
 		
 			
+	}
+	else
+	{
+		Gizmo::GetInstance()->DrawDiam(hdc, mDiam, Gizmo::Color::Green);
+	}
+	if (mAttackTest) {
+		mTestTime++;
+		if (mTestTime > 10) {
+			mTestTime = 0;
+			mAttackTest = false;
+		}
+		SelectRenderBlue(hdc);
+	}
+}
+void Tile::AlphaRender(HDC hdc)
+{
+	if (mImage)
+	{
+		CAMERA->AlphaScaleFrameRender(hdc, mImage, mX, mY, mFrameX, mFrameY, mSizeX, mSizeY,0.5f);
+		//mImage->ScaleFrameRender(hdc, mX, mY, mFrameX, mFrameY, mSizeX, mSizeY);
 	}
 	else
 	{

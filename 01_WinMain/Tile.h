@@ -12,7 +12,6 @@ enum class TileType : int
 
 class Tile
 {
-
 	Image* mImage;
 	float mX;
 	float mY;
@@ -28,18 +27,15 @@ class Tile
 	bool mAttackTest = false;
 	int mTestTime= 0;
 
-
-	bool mOccupied;
 	GameObject* mObject;
-
 public:
-
 	Tile(Image* pImage,  float x, float y, int frameX, int frameY, int sizeX, int sizeY, int indexX, int indexY);
 	void Render(HDC hdc);
+	void AlphaRender(HDC hdc);
 	void SelectRender(HDC hdc);
 	void SelectRenderBlue(HDC hdc);
 	void SelectRenderMargenta(HDC hdc);
-
+	
 	Image* GetImage() { return mImage; }
 	void SetImage(Image* pImage) { mImage = pImage; }
 	
@@ -52,6 +48,9 @@ public:
 
 	int GetIndexX() { return mIndexX; }
 	int GetIndexY() { return mIndexY; }
+
+	int GetCenterX() { return mX+TileSizeX/2; }
+	int GetCenterY() { return mY+TileSizeY/2; }
 
 	float GetX() { return mX; }
 	float GetY() { return mY; }
