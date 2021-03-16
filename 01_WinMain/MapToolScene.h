@@ -14,6 +14,7 @@ class MapToolScene  : public Scene
 
 	Tile* mCurrentTile;
 	Pallete* mCurrentPallete;
+	
 
 	Button* mSave;
 	Button* mLoad;
