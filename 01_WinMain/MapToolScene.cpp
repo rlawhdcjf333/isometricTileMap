@@ -105,6 +105,7 @@ void MapToolScene::Load()
 	loadStream.open(L"../04_Data/Object.txt");
 	if (loadStream.is_open()) //파일을 정상적으로 열었는지 확인
 	{
+		vector <MapObject*> tmp;
 		while (loadStream.peek() != EOF) {
 			string key;
 			int x;
@@ -120,8 +121,10 @@ void MapToolScene::Load()
 			wstring wstr;
 			wstr.assign(key.begin(), key.end());
 			MapObject* mapObject = new MapObject(IMAGEMANAGER->FindImage(wstr), x, y);
-			mMapObjectList.emplace_back(mapObject);
+			tmp.emplace_back(mapObject);
 		 }
+
+		mMapObjectList.assign(tmp.begin(), tmp.end());
 	}
 }
 

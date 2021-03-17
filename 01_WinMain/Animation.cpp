@@ -5,6 +5,14 @@ Animation::Animation()
 	:mIsPlay(false), mIsLoop(false), mCurrentFrameIndex(0),
 	mCurrentFrameTime(0.f), mFrameUpdateTime(0.f), mCallbackFunc(nullptr) {}
 
+Animation::Animation(int startX, int startY, int endX, int endY, bool isReverse, bool isLoop, float updateTime)
+{
+	Animation();
+	InitFrameByStartEnd(startX, startY, endX, endY, isReverse);
+	SetIsLoop(isLoop);
+	SetFrameUpdateTime(updateTime);
+}
+
 void Animation::Update()
 {
 	if (mIsPlay == false)
