@@ -16,6 +16,7 @@ Player::Player(int indexX, int indexY, float sizeX, float sizeY)
 	mSizeY = sizeY;
 	mRect = RectMakeBottom(mX, mY, mSizeX, mSizeY);
 	mIsDash = false;
+	mName = "player";
 }
 
 void Player::Init()

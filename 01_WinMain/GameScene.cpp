@@ -3,21 +3,22 @@
 #include "Player.h"
 #include "Tile.h"
 #include "Dumb.h"
+#include "MapObject.h"
 void GameScene::Init()
 {
 	MapLoad();
-	mPlayer = new Player(30,30, 30,30);
-	mPlayer->Init();
 	
-	ObjectManager::GetInstance()->AddObject(ObjectLayer::Enemy,new Dumb());
+	Obj->AddObject(ObjectLayer::Player, new Player(30, 30, 30, 30));
+	Obj->AddObject(ObjectLayer::Enemy,new Dumb());
+	Obj->Init();
+
 	CAMERA->ChangeMode(Camera::Mode::Follow);
-	CAMERA->SetTarget(mPlayer);
+	CAMERA->SetTarget(Obj->FindObject("player"));
 }
 
 void GameScene::Update()
 {
 	ObjectManager::GetInstance()->Update();
-	mPlayer->Update();
 }
 
 void GameScene::Render(HDC hdc)
@@ -30,8 +31,6 @@ void GameScene::Render(HDC hdc)
 			mTileList[y][x]->Render(hdc);
 		}
 	}
-		
-	mPlayer->Render(hdc);
 
 	SetBkMode(hdc, TRANSPARENT);
 	TextOut(hdc, 800, 100, L"이동: 우클릭, 꾹 누르고 있어도 됨.", 21);
@@ -48,8 +47,8 @@ void GameScene::Release()
 		}
 	}
 
-
-	SafeDelete(mPlayer);
+	Obj->Release();
+	
 }
 
 void GameScene:: MapLoad()
@@ -107,6 +106,30 @@ void GameScene:: MapLoad()
 				mTileList[y][x]->SetFrameY(frameY);
 				mTileList[y][x]->SetType((TileType)type);
 			}
+		}
+	}
+	loadStream.close();
+
+	loadStream.open(L"../04_Data/Object.txt");
+	if (loadStream.is_open())
+	{
+		while (loadStream.peek() != EOF) {
+			string key;
+			int x;
+			int y;
+			int type;
+			string buffer;
+			getline(loadStream, buffer, ',');
+			key = buffer;
+			getline(loadStream, buffer, ',');
+			x = stoi(buffer);
+			getline(loadStream, buffer);
+			y = stoi(buffer);
+			wstring wstr;
+			wstr.assign(key.begin(), key.end());
+			MapObject* mapObject = new MapObject(IMAGEMANAGER->FindImage(wstr), x, y);
+
+			Obj->AddObject(ObjectLayer::MapObject, mapObject);
 		}
 	}
 

@@ -1,14 +1,21 @@
 #include "pch.h"
 #include "MapToolScene.h"
 #include "Button.h"
+#include "Command.h"
 #include "Tile.h"
 #include "Pallete.h"
-#include "Command.h"
+#include "MapObject.h"
+#include "MapObjectPallete.h"
 
 void MapToolScene::RegisterCommand(ICommand* command)
 {
 	command->Execute();
-	mCommandList.emplace(command);
+	if (mCurrentLayer==Layer::Object) {
+		mObjectCommandList.emplace(command);
+	}
+	else if (mCurrentLayer==Layer::Tile) {
+		mCommandList.emplace(command);
+	}
 }
 
 void MapToolScene::Save()
@@ -41,25 +48,20 @@ void MapToolScene::Save()
 	saveStream.open(L"../04_Data/Object.txt");
 	if (saveStream.is_open())
 	{
-		for (int y = 0; y < mObjectList.size(); ++y)
+		for ( MapObject* elem: mMapObjectList)
 		{
-			for (int x = 0; x < mObjectList[y].size(); ++x)
-			{
-				string str;
-				wstring keyName;
-				if (mObjectList[y][x]->GetImage() != nullptr)
-					keyName = mObjectList[y][x]->GetImage()->GetKeyName();
-				str.assign(keyName.begin(), keyName.end());
+			string str;
+			wstring keyName;
+			if (elem->GetImageKey() != L"")
+				keyName = elem->GetImageKey();
+			str.assign(keyName.begin(), keyName.end());
 
-				saveStream << str.c_str();
-				saveStream << ',';
-				saveStream << mObjectList[y][x]->GetFrameX();
-				saveStream << ',';
-				saveStream << mObjectList[y][x]->GetFrameY();
-				saveStream << ',';
-				saveStream << (int)mObjectList[y][x]->GetType();
-				saveStream << endl;
-			}
+			saveStream << str.c_str();
+			saveStream << ',';
+			saveStream << elem->GetX();
+			saveStream << ',';
+			saveStream << elem->GetY();
+			saveStream << endl;
 		}
 	}
 }
@@ -103,60 +105,75 @@ void MapToolScene::Load()
 	loadStream.open(L"../04_Data/Object.txt");
 	if (loadStream.is_open()) //파일을 정상적으로 열었는지 확인
 	{
-		for (int y = 0; y < mObjectList.size(); ++y)
-		{
-			for (int x = 0; x < mObjectList[y].size(); ++x)
-			{
-				string key;
-				int frameX;
-				int frameY;
-				int type;
-				string buffer;
-
-				getline(loadStream, buffer, ',');
-				key = buffer;
-				getline(loadStream, buffer, ',');
-				frameX = stoi(buffer);
-				getline(loadStream, buffer, ',');
-				frameY = stoi(buffer);
-				getline(loadStream, buffer);
-				type = stoi(buffer);
-
-				wstring wstr;
-				wstr.assign(key.begin(), key.end());
-				mObjectList[y][x]->SetImage(IMAGEMANAGER->FindImage(wstr));
-				mObjectList[y][x]->SetFrameX(frameX);
-				mObjectList[y][x]->SetFrameY(frameY);
-				mObjectList[y][x]->SetType((TileType)type);
-			}
-		}
+		while (loadStream.peek() != EOF) {
+			string key;
+			int x;
+			int y;
+			int type;
+			string buffer;
+			getline(loadStream, buffer, ',');
+			key = buffer;
+			getline(loadStream, buffer, ',');
+			x = stoi(buffer);
+			getline(loadStream, buffer);
+			y = stoi(buffer);
+			wstring wstr;
+			wstr.assign(key.begin(), key.end());
+			MapObject* mapObject = new MapObject(IMAGEMANAGER->FindImage(wstr), x, y);
+			mMapObjectList.emplace_back(mapObject);
+		 }
 	}
 }
 
 void MapToolScene::Undo()
 {
-	if (mCommandList.empty()) return;
+	if (mCurrentLayer == Layer::Object) {
+		if (mObjectCommandList.empty()) return;
 
-	mRedoList.emplace(mCommandList.top());
-	mCommandList.top()->Undo();
-	mCommandList.pop();
+		mObjectRedoList.emplace(mObjectCommandList.top());
+		mObjectCommandList.top()->Undo();
+		mObjectCommandList.pop();
+	}
+	else if (mCurrentLayer == Layer::Tile) {
+		if (mCommandList.empty()) return;
+
+		mRedoList.emplace(mCommandList.top());
+		mCommandList.top()->Undo();
+		mCommandList.pop();
+	}
 }
 
 void MapToolScene::Redo()
 {
-	if (mRedoList.empty()) return;
-	
-	mCommandList.emplace(mRedoList.top());
-	mRedoList.top()->Execute();
-	mRedoList.pop();
+	if (mCurrentLayer == Layer::Object) {
+		if (mObjectRedoList.empty()) return;
+
+		mObjectCommandList.emplace(mObjectRedoList.top());
+		mObjectRedoList.top()->Redo();
+		mObjectRedoList.pop();
+	}
+	else if (mCurrentLayer == Layer::Tile) {
+		if (mRedoList.empty()) return;
+
+		mCommandList.emplace(mRedoList.top());
+		mRedoList.top()->Redo();
+		mRedoList.pop();
+	}
 }
 
 void MapToolScene::ChangeLayer()
 {
-	mIsLayer = Layer((int)mIsLayer + 1);
-	if (mIsLayer == Layer::End)
+	mCurrentLayer = Layer((int)mCurrentLayer + 1);
+	if (mCurrentLayer == Layer::End)
 	{
-		mIsLayer = Layer::Tile;
+		mCurrentLayer = Layer::Tile;
+	}
+}
+
+void MapToolScene::stackClear(stack<ICommand*>* stack)
+{
+	while (!stack->empty()) {
+		stack->pop();
 	}
 }
 
@@ -164,6 +181,7 @@ void MapToolScene::Init()
 {
 	IMAGEMANAGER->LoadFromFile(L"Tiles", Resources(L"tile_test.bmp"), 372, 372, 3,6, true);
 	IMAGEMANAGER->LoadFromFile(L"ForestObject", Resources(L"forestObject.bmp"), 360, 300, 3, 5, true);
+	IMAGEMANAGER->LoadFromFile(L"Tree1", ResourcesObject(L"Tree1.bmp"),200,167,true);
 	mImage = IMAGEMANAGER->FindImage(L"Tiles");
 
 	for (int y = 0; y < 75; y++) // 타일 레이어 도화지
@@ -189,29 +207,6 @@ void MapToolScene::Init()
 		}
 		mTileList.push_back(tmp);
 	}
-	for (int y = 0; y < 75; y++) // 오브젝트 레이어 도화지
-	{
-		vector <Tile*> tmp;
-		for (int x = 0; x < 75; x++)
-		{
-			tmp.push_back
-			(
-				new Tile
-				(
-					nullptr,
-					StartX + (x - y) * TileSizeX / 2,
-					StartY + (x + y) * TileSizeY / 2,
-					0,
-					0,
-					TileSizeX,
-					TileSizeY,
-					x,
-					y
-				)
-			);
-		}
-		mObjectList.push_back(tmp);
-	}
 	for (int y = 0; y < 3; y++) //타일 팔레트
 	{
 		vector <Pallete*> tmp;
@@ -232,26 +227,9 @@ void MapToolScene::Init()
 		}
 		mPalleteList.push_back(tmp);
 	}
-	for (int y = 0; y < 3; y++) //오브젝트 팔레트
-	{
-		vector <Pallete*> tmp;
-		for (int x = 0; x < 5; x++)
-		{
-			tmp.push_back(
-				new Pallete
-				(
-					IMAGEMANAGER->FindImage(L"ForestObject"),
-					900 + 50 * x,
-					100 + 25 * y,
-					y,
-					x,
-					50,
-					25
-				)
-			);
-		}
-		mObjectPalleteList.push_back(tmp);
-	}
+	vector <MapObjectPallete*> tmp;
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Tree1"), 900, 100));
+	mMapObjectPallete.push_back(tmp);
 
 	mPalletRc = RectMake(900, 100, 5 * 50, 3 * 25);
 	mSave = new Button(L"저장", 150, 25, 200, 50, [this]() {Save();});
@@ -260,7 +238,7 @@ void MapToolScene::Init()
 	mRedo = new Button(L"되돌리기 취소", 780, 25, 200, 50, [this]() {Redo();});
 	mNext = new Button(L"게임로드", 990, 25, 200, 50, []() {SceneManager::GetInstance()->LoadScene(L"GameScene");});
 	mChangeLayer = new Button(L"레이어 변경", 150, 80, 200, 50, [this]() {ChangeLayer(); });
-
+	mMenuRc = RectMake(150, 25, 1190, 150);
 	CameraManager::GetInstance()->GetMainCamera()->ChangeMode(Camera::Mode::Free);
 	CAMERA->SetX(StartX);
 	CAMERA->SetY(StartY);
@@ -277,14 +255,6 @@ void MapToolScene::Release()
 			SafeDelete(mTileList[y][x]);
 		}
 	}
-	for (int y = 0; y < mObjectList.size(); y++)
-	{
-		for (int x = 0; x < mObjectList[y].size(); x++)
-		{
-			SafeDelete(mObjectList[y][x]);
-		}
-	}
-
 	for (int y = 0; y < mPalleteList.size(); y++)
 	{
 		for (int x = 0; x < mPalleteList[y].size(); x++)
@@ -292,14 +262,10 @@ void MapToolScene::Release()
 			SafeDelete(mPalleteList[y][x]);
 		}
 	}
-	for (int y = 0; y < mObjectPalleteList.size(); y++)
+	for (MapObject* elem : mMapObjectList)
 	{
-		for (int x = 0; x < mObjectPalleteList[y].size(); x++)
-		{
-			SafeDelete(mObjectPalleteList[y][x]);
-		}
+		SafeDelete(elem);
 	}
-
 	while (!mCommandList.empty())
 	{
 		auto iter = mCommandList.top();
@@ -325,10 +291,12 @@ void MapToolScene::Release()
 void MapToolScene::Update()
 {
 	mCurrentTile = nullptr;
-	int x = _mousePosition.y/ TileSizeY + _mousePosition.x / TileSizeX -(StartX/TileSizeX +StartY/TileSizeY);
-	int y = _mousePosition.y/ TileSizeY - _mousePosition.x / TileSizeX +(StartX/TileSizeX - StartY/TileSizeY);
-	int offsetX = _mousePosition.x % TileSizeX;
-	int offsetY = _mousePosition.y % TileSizeY;
+
+	int x = CAMERA->CameraMouseY() / TileSizeY + CAMERA->CameraMouseX() / TileSizeX - (StartX / TileSizeX + StartY / TileSizeY);
+	int y = CAMERA->CameraMouseY() / TileSizeY - CAMERA->CameraMouseX() / TileSizeX + (StartX / TileSizeX - StartY / TileSizeY);
+	int offsetX = CAMERA->CameraMouseX() % TileSizeX;
+	int offsetY = CAMERA->CameraMouseY() % TileSizeY;
+
 
 	if (offsetY < TileSizeY / 2 - offsetX / 2) { x--; }
 	if (offsetY < offsetX / 2 - TileSizeY / 2) { y--; }
@@ -337,12 +305,7 @@ void MapToolScene::Update()
 	
 	if (x >= 0 and x < mTileList.size() and y >= 0 and y < mTileList.size())
 	{
-		if (mIsLayer == Layer::Tile) {
-			mCurrentTile = mTileList[y][x];
-		}
-		else if (mIsLayer == Layer::Object) {
-			mCurrentTile = mObjectList[y][x];
-		}
+		mCurrentTile = mTileList[y][x];
 	}
 
 	if (INPUT->GetKeyDown(VK_TAB)) {
@@ -361,7 +324,7 @@ void MapToolScene::Update()
 	}
 	if (mCurrentTile and mCurrentPallete)
 	{
-		if (!PtInRect(&mPalletRc, nonC_mousePosition) and Input::GetInstance()->GetKey(VK_LBUTTON))
+		if (!PtInRect(&mPalletRc, nonC_mousePosition) and !PtInRect(&mMenuRc, nonC_mousePosition) and Input::GetInstance()->GetKey(VK_LBUTTON))
 		{
 			if (mCurrentTile->GetImage() != mCurrentPallete->GetImage() or
 				mCurrentTile->GetFrameX() != mCurrentPallete->GetFrameX() or
@@ -373,8 +336,16 @@ void MapToolScene::Update()
 			}
 		}
 	}
+	if (mCurrentMapObjectPallete)
+	{
+		if (!PtInRect(&mPalletRc, nonC_mousePosition) and !PtInRect(&mMenuRc, nonC_mousePosition) and Input::GetInstance()->GetKeyUp(VK_LBUTTON))
+		{
+			IMapObject* command = new IMapObject(_mousePosition, mCurrentMapObjectPallete,&mMapObjectList);
+			RegisterCommand(command);
+		}
+	}
 	if (!mTabKey) {
-		if (mIsLayer == Layer::Tile)
+		if (mCurrentLayer == Layer::Tile)
 		{
 			for (auto elem : mPalleteList)
 			{
@@ -387,20 +358,29 @@ void MapToolScene::Update()
 				}
 			}
 		}
-		else if (mIsLayer == Layer::Object)
+		else if (mCurrentLayer == Layer::Object)
 		{
-			for (auto elem : mObjectPalleteList)
+			for (auto elem : mMapObjectPallete)
 			{
 				for (auto elemelem : elem)
 				{
-					if (PtInRect(elemelem->GetRect(), nonC_mousePosition) and Input::GetInstance()->GetKeyUp(VK_LBUTTON))
+					RECT rc = elemelem->GetRect();
+					if (PtInRect(&rc, nonC_mousePosition) and Input::GetInstance()->GetKeyUp(VK_LBUTTON))
 					{
-						mCurrentPallete = elemelem;
+						mCurrentMapObjectPallete = elemelem;
 					}
 				}
 			}
+
 		
 		}
+
+		function <bool(MapObject* a, MapObject* b)> comp = [](MapObject* a, MapObject* b) 
+		{ 
+			return a->GetY() < b->GetY();
+		};
+
+		sort(mMapObjectList.begin(), mMapObjectList.end(), comp);
 
 		mSave->Update();
 		mLoad->Update();
@@ -418,7 +398,7 @@ void MapToolScene::Render(HDC hdc)
 	{
 		for (int x = 0; x < mTileList[y].size(); x++)
 		{
-			if (mIsLayer == Layer::Tile) {
+			if (mCurrentLayer == Layer::Tile) {
 				mTileList[y][x]->Render(hdc);
 			}
 			else {
@@ -429,19 +409,13 @@ void MapToolScene::Render(HDC hdc)
 			}
 		}
 	}
-	for (int y = 0; y < mObjectList.size(); y++)
+	for (MapObject* elem : mMapObjectList)
 	{
-		for (int x = 0; x < mObjectList[y].size(); x++)
-		{
-			if (mIsLayer == Layer::Object) {
-				mObjectList[y][x]->Render(hdc);
-			}
-			else {
-				mObjectList[y][x]->AlphaRender(hdc);
-			}
-			if (!mRenderToggle) {
-				mObjectList[y][x]->SelectRenderMargenta(hdc);
-			}
+		if (mCurrentLayer == Layer::Object) {
+			elem->Render(hdc);
+		}
+		else {
+			elem->AlphaRender(hdc);
 		}
 	}
 	if (mCurrentTile)
@@ -463,13 +437,16 @@ void MapToolScene::Render(HDC hdc)
 			wstring text = L"Block";
 			TextOut(hdc, 50, 100, text.c_str(), text.length());
 		}
-		
 	}
-	if (mIsLayer == Layer::Object) {
+	if (mCurrentMapObjectPallete)
+	{
+		mCurrentMapObjectPallete->Render(hdc, _mousePosition.x - 25, _mousePosition.y - 12);
+	}
+	if (mCurrentLayer == Layer::Object) {
 		wstring text = L"Object Layer";
 		TextOut(hdc, 50, 150, text.c_str(), text.length());
 	}
-	else if (mIsLayer==Layer::Tile) {
+	else if (mCurrentLayer==Layer::Tile) {
 		wstring text = L"Tile Layer";
 		TextOut(hdc, 50, 150, text.c_str(), text.length());
 	}
@@ -482,7 +459,7 @@ void MapToolScene::Render(HDC hdc)
 		mNext->Render(hdc);
 		mChangeLayer->Render(hdc);
 
-		if (mIsLayer == Layer::Tile)
+		if (mCurrentLayer == Layer::Tile)
 		{
 			for (int y = 0; y < mPalleteList.size(); y++)
 			{
@@ -492,13 +469,13 @@ void MapToolScene::Render(HDC hdc)
 				}
 			}
 		}
-		else if (mIsLayer == Layer::Object)
+		else if (mCurrentLayer == Layer::Object)
 		{
-			for (int y = 0; y < mObjectPalleteList.size(); y++)
+			for (int y = 0; y < mMapObjectPallete.size(); y++)
 			{
-				for (int x = 0; x < mObjectPalleteList[y].size(); x++)
+				for (int x = 0; x < mMapObjectPallete[y].size(); x++)
 				{
-					mObjectPalleteList[y][x]->Render(hdc);
+					mMapObjectPallete[y][x]->Render(hdc);
 				}
 			}
 		}

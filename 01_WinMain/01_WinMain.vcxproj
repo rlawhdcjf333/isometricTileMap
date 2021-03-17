@@ -167,6 +167,8 @@
     <ClInclude Include="IntersectManager.h" />
     <ClInclude Include="LoadingScene.h" />
     <ClInclude Include="MainGame.h" />
+    <ClInclude Include="MapObject.h" />
+    <ClInclude Include="MapObjectPallete.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="ObjectManager.h" />
     <ClInclude Include="PathFinder.h" />
@@ -207,6 +209,8 @@
     <ClCompile Include="LoadingScene.cpp" />
     <ClCompile Include="MainGame + MainProc.cpp" />
     <ClCompile Include="MainGame.cpp" />
+    <ClCompile Include="MapObject.cpp" />
+    <ClCompile Include="MapObjectPallete.cpp" />
     <ClCompile Include="Math.cpp" />
     <ClCompile Include="ObjectManager.cpp" />
     <ClCompile Include="PathFinder.cpp" />

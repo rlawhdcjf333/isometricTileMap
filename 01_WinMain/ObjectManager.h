@@ -14,15 +14,18 @@ enum class ObjectLayer : int
 	UI = 3,
 	Player_Bullet = 4,
 	Enemy_Bullet,
+	MapObject,
 	End
 };
 
 class ObjectManager
 {
 	Singleton(ObjectManager)
+
 private:
 	typedef map<ObjectLayer, vector<class GameObject*>>::iterator ObjectIter;
 	map<ObjectLayer, vector<class GameObject*>> mObjectList;
+	vector<GameObject*> mRenderList;
 public:
 	ObjectManager();
 
@@ -41,3 +44,4 @@ public:
 
 };
 
+#define Obj ObjectManager::GetInstance()

@@ -17,6 +17,7 @@
 #include <stack>
 #include <queue>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 
