@@ -23,6 +23,7 @@ class Animation
 	function<void(void)> mCallbackFunc;		//애니메이션이 전부 플레이되고 끝날 때 실행할 함수
 public:
 	Animation();
+	Animation(int startX, int startY, int endX, int endY, bool isReverse, bool isLoop, float updateTime);
 
 	void Update();
 

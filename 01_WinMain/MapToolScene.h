@@ -14,12 +14,14 @@ class MapToolScene  : public Scene
 	Image* mImage;
 
 	vector <vector<Tile*>> mTileList;
-	vector <vector<Tile*>> mObjectList;
 	vector <vector<Pallete*>> mPalleteList;
-	vector <vector<Pallete*>> mObjectPalleteList;
+	vector <class MapObject*> mMapObjectList;
+	vector <vector<class MapObjectPallete*>> mMapObjectPallete;
 
 	Tile* mCurrentTile;
 	Pallete* mCurrentPallete;
+	//MapObject* mCurrentMapObject;
+	MapObjectPallete* mCurrentMapObjectPallete;
 
 	Button* mSave;
 	Button* mLoad;
@@ -30,21 +32,24 @@ class MapToolScene  : public Scene
 
 	stack <ICommand*>  mCommandList;
 	stack <ICommand*> mRedoList;
+	stack <ICommand*> mObjectCommandList;
+	stack <ICommand*> mObjectRedoList;
+
 	RECT mPalletRc;
-	Layer mIsLayer = Layer::Tile;
+	RECT mMenuRc;
+	Layer mCurrentLayer = Layer::Tile;
 	
 	bool mTabKey = false;
 	bool mRenderToggle = false;
 private:
-	
 	void RegisterCommand(ICommand* command);
 	void Save();
 	void Load();
 	void Undo();
 	void Redo();
 	void ChangeLayer();
+	void stackClear(stack<ICommand*>* stack);
 public:
-
 	void Init()override;
 	void Release()override;
 	void Update()override;

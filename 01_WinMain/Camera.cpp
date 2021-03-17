@@ -63,46 +63,100 @@ void Camera::Render(HDC hdc)
 
 void Camera::Render(HDC hdc, Image * image, int x, int y)
 {
+	if (mRect.left> x+image->GetWidth() || mRect.right < x) {
+		return;
+	}
+	if (mRect.top> y+image->GetHeight() || mRect.bottom <y) {
+		return;
+	}
 	image->Render(hdc, x - mRect.left, y - mRect.top);
 }
 
 void Camera::Render(HDC hdc, Image * image, int x, int y, int tempX, int tempY, int tempWidth, int tempHeight)
 {
+	if (mRect.left > x + tempWidth || mRect.right < x) {
+		return;
+	}
+	if (mRect.top > y + tempHeight || mRect.bottom < y) {
+		return;
+	}
 	image->Render(hdc, x - mRect.left, y - mRect.top, tempX, tempY, tempWidth, tempHeight);
 }
 
 void Camera::FrameRender(HDC hdc, Image * image, int x, int y, int frameX, int frameY)
 {
+	if (mRect.left > x + image->GetFrameWidth() || mRect.right < x) {
+		return;
+	}
+	if (mRect.top > y + image->GetFrameHeight() || mRect.bottom < y) {
+		return;
+	}
 	image->FrameRender(hdc, x - mRect.left, y - mRect.top, frameX, frameY);
 }
 
 void Camera::AlphaRender(HDC hdc, Image * image, int x, int y, float alpha)
 {
+	if (mRect.left > x + image->GetWidth() || mRect.right < x) {
+		return;
+	}
+	if (mRect.top > y + image->GetHeight() || mRect.bottom < y) {
+		return;
+	}
 	image->AlphaRender(hdc, x - mRect.left, y - mRect.top, alpha);
 }
 
 void Camera::AlphaFrameRender(HDC hdc, Image * image, int x, int y, int frameX, int frameY, float alpha)
 {
+	if (mRect.left > x + image->GetFrameWidth() || mRect.right < x) {
+		return;
+	}
+	if (mRect.top > y + image->GetFrameHeight() || mRect.bottom < y) {
+		return;
+	}
 	image->AlphaFrameRender(hdc, x - mRect.left, y - mRect.top, frameX, frameY, alpha);
 }
 
 void Camera::ScaleRender(HDC hdc, Image * image, int x, int y, int width, int height)
 {
+	if (mRect.left > x + width || mRect.right < x) {
+		return;
+	}
+	if (mRect.top > y + height || mRect.bottom < y) {
+		return;
+	}
 	image->ScaleRender(hdc, x - mRect.left, y - mRect.top, width, height);
 }
 
 void Camera::ScaleFrameRender(HDC hdc, Image * image, int x, int y, int frameX, int frameY, int width, int height)
 {
+	if (mRect.left > x + width || mRect.right < x) {
+		return;
+	}
+	if (mRect.top > y + height || mRect.bottom < y) {
+		return;
+	}
 	image->ScaleFrameRender(hdc, x - mRect.left, y - mRect.top, frameX, frameY, width, height);
 }
 
 void Camera::AlphaScaleRender(HDC hdc, Image * image, int x, int y, int width, int height, float alpha)
 {
+	if (mRect.left > x + width || mRect.right < x) {
+		return;
+	}
+	if (mRect.top > y + height || mRect.bottom < y) {
+		return;
+	}
 	image->AlphaScaleRender(hdc, x - mRect.left, y - mRect.top, width, height, alpha);
 }
 
 void Camera::AlphaScaleFrameRender(HDC hdc, Image * image, int x, int y, int frameX, int frameY, int width, int height, float alpha)
 {
+	if (mRect.left > x + width || mRect.right < x) {
+		return;
+	}
+	if (mRect.top > y + height || mRect.bottom < y) {
+		return;
+	}
 	image->AlphaScaleFrameRender(hdc, x - mRect.left, y - mRect.top, frameX, frameY, width, height, alpha);
 }
 

@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "TileSelect.h"
 #include "Bullet.h"
+#include "Animation.h"
 
 Player::Player(int indexX, int indexY, float sizeX, float sizeY)
 	:GameObject("Player"), mTime(0), mFrameX(0)  
@@ -16,27 +17,38 @@ Player::Player(int indexX, int indexY, float sizeX, float sizeY)
 	mSizeY = sizeY;
 	mRect = RectMakeBottom(mX, mY, mSizeX, mSizeY);
 	mIsDash = false;
+	mName = "player";
 }
 
 void Player::Init()
 {
-	IMAGEMANAGER->LoadFromFile(L"Sans", Resources(L"Sans.bmp"), 92, 30, 4, 1, true);
-	mImage = IMAGEMANAGER->GetInstance()->FindImage(L"Sans");
+	//IMAGEMANAGER->LoadFromFile(L"Sans", Resources(L"Sans.bmp"), 92, 30, 4, 1, true);
+	//mImage = IMAGEMANAGER->GetInstance()->FindImage(L"Sans");
 	mTileSelect = new TileSelect;
+	
+	IMAGEMANAGER->LoadFromFile(L"LittleBone", Resources(L"skul/skul_little_bone.bmp"), 3780, 2400, 27, 24, true);
+	mImage = IMAGEMANAGER->GetInstance()->FindImage(L"LittleBone");
+
+
+	mSizeX = mImage->GetFrameWidth();
+	mSizeY = mImage->GetFrameHeight();
+
+	Animation* rightIdle = new Animation(0, 0, 3, 0, false, true, 0.2f);
+	mAnimationList.push_back(rightIdle);
+	mCurrentAnimation = rightIdle;
+
+	Animation* leftIdle = new Animation(0, 0, 10, 4, true, true, 0.2f);
+	mAnimationList.push_back(leftIdle);
+
+
+	mCurrentAnimation->Play();
+
 }
 
 void Player::Update()
 {
-	mTime += dTime;
+	mCurrentAnimation->Update();
 
-	if (mTime > 0.2)
-	{
-		mTime = 0;
-		mFrameX++;
-	}
-	if (mFrameX > 3) mFrameX = 0;
-
- 
 	mSpeed = mInitSpeed;
 	if (TILE[mIndexY][mIndexX]->GetType() == TileType::Slow)
 	{
@@ -84,12 +96,17 @@ void Player::Update()
 void Player::Release()
 {
 	SafeDelete(mTileSelect);
+
+	for (Animation* elem : mAnimationList)
+	{
+		SafeDelete(elem);
+	}
+
 }
 
 void Player::Render(HDC hdc)
 {
-	CAMERA->ScaleFrameRender(hdc, mImage, mRect.left, mRect.top, mFrameX, 0, mSizeX, mSizeY);
-	//mImage->ScaleFrameRender(hdc, mX-mSizeX/2, mY-mSizeY, mFrameX, 0, mSizeX, mSizeY);
+	CAMERA->ScaleFrameRender(hdc, mImage, mRect.left, mRect.top+25, mCurrentAnimation->GetNowFrameX(), mCurrentAnimation->GetNowFrameY(), mSizeX, mSizeY);
 	mTileSelect->Render(hdc);
 
 	//{{ 개발자용 타일 체크 렌더링

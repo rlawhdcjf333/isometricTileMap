@@ -216,6 +216,12 @@
     <ClInclude Include="IntersectManager.h">
       <Filter>FrameWork\IntersectManager</Filter>
     </ClInclude>
+    <ClInclude Include="MapObject.h">
+      <Filter>FrameWork\MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObjectPallete.h">
+      <Filter>FrameWork\MapTool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="01_WinMain.cpp">
@@ -322,6 +328,12 @@
     </ClCompile>
     <ClCompile Include="IntersectManager.cpp">
       <Filter>FrameWork\IntersectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObject.cpp">
+      <Filter>FrameWork\MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObjectPallete.cpp">
+      <Filter>FrameWork\MapTool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

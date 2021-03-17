@@ -29,7 +29,7 @@ static ClassName* GetInstance()\
 }
 
 #define Resources(Path) (wstring(L"../02_Resources/").append(Path))
-
+#define ResourcesObject(Path) (wstring(L"../02_Resources/MapObject/").append(Path))
 //±Ý¼ú
 #define Synthesize(VarType,VarName,FuncName)\
 protected: VarType VarName;\

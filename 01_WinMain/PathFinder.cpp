@@ -67,6 +67,7 @@ bool PathFinder::FindPath(const vector<vector<class Tile*>>& tileList, vector<Ti
 	// {{ 길찾기 루프 
 	while (true)
 	{
+		if (openList.size() > 75) return false;
 		//뭔가 잘못되었다??? 
 		if (currentTile == nullptr)return false;
 		int currentIndexX = currentTile->GetIndexX();

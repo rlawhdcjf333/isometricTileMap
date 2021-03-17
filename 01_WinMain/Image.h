@@ -5,7 +5,7 @@ private:
 	enum class LoadType : int
 	{
 		Resource,
-		File, 
+		File,
 		Empty,
 		End
 	};
@@ -13,10 +13,10 @@ private:
 	struct ImageBuffer
 	{
 		ULONG registerID;
-		HDC hdc; 
+		HDC hdc;
 		HBITMAP bitmap;
 		HBITMAP oldBitmap;
-		int width; 
+		int width;
 		int height;
 		int frameX;
 		int frameY;
@@ -44,8 +44,8 @@ public:
 	void ReleaseBuffer();
 public:// 생성관련 ~
 	bool CreateEmpty(int width, int height);
-	bool LoadFromFile(wstring keyName,wstring fileName, int width, int height, bool isTrans, COLORREF transColor = RGB(255,0,255));
-	bool LoadFromFile(wstring keyName,wstring fileName, int width, int height, int frameX, int frameY, bool isTrans, COLORREF transColor = RGB(255,0,255));
+	bool LoadFromFile(wstring keyName, wstring fileName, int width, int height, bool isTrans, COLORREF transColor = RGB(255, 0, 255));
+	bool LoadFromFile(wstring keyName, wstring fileName, int width, int height, int frameX, int frameY, bool isTrans, COLORREF transColor = RGB(255, 0, 255));
 public://렌더링 관련 ~
 	//기본렌더링
 	void Render(HDC hdc, int x, int y);
@@ -54,7 +54,7 @@ public://렌더링 관련 ~
 	//프레임렌더
 	void FrameRender(HDC hdc, int x, int y, int frameX, int frameY);
 	//알파값주는 렌더링
-	void AlphaRender(HDC hdc,int x, int y, float alpha);
+	void AlphaRender(HDC hdc, int x, int y, float alpha);
 	//알파값주는 프레임 렌더링
 	void AlphaFrameRender(HDC hdc, int x, int y, int frameX, int frameY, float alpha);
 	//크기 조정해주는 렌더링

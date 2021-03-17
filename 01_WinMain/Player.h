@@ -6,13 +6,28 @@ enum class AttackType : int {
 	Whirlwind,
 	RangedAttack
 };
+
+enum class Motion : int {
+
+	RightIdle=0,
+	LeftIdle,
+	RigthWalk,
+	LeftWalk
+
+};
 class TileSelect;
 class Tile;
+class Animation;
 class Player : public GameObject
 {
 	Image* mImage;
 	TileSelect* mTileSelect;
 	vector<Tile*> mPath;
+
+	Animation* mCurrentAnimation;
+	vector <Animation*> mAnimationList;
+
+
 	float mSpeed;
 	float mInitSpeed;
 	float mAngle;
