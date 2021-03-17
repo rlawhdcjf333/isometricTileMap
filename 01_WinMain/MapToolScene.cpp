@@ -185,6 +185,8 @@ void MapToolScene::Init()
 	IMAGEMANAGER->LoadFromFile(L"Tiles", Resources(L"tile_test.bmp"), 372, 372, 3,6, true);
 	IMAGEMANAGER->LoadFromFile(L"ForestObject", Resources(L"forestObject.bmp"), 360, 300, 3, 5, true);
 	IMAGEMANAGER->LoadFromFile(L"Tree1", ResourcesObject(L"Tree1.bmp"),200,167,true);
+	IMAGEMANAGER->LoadFromFile(L"Tree2", ResourcesObject(L"Tree2.bmp"), 86, 142, true);
+	IMAGEMANAGER->LoadFromFile(L"Tree3", ResourcesObject(L"Tree3.bmp"), 92, 190, true);
 	mImage = IMAGEMANAGER->FindImage(L"Tiles");
 
 	for (int y = 0; y < 75; y++) // 타일 레이어 도화지
@@ -231,7 +233,7 @@ void MapToolScene::Init()
 		mPalleteList.push_back(tmp);
 	}
 	vector <MapObjectPallete*> tmp;
-	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Tree1"), 900, 100));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Tree3"), 900, 100));
 	mMapObjectPallete.push_back(tmp);
 
 	mPalletRc = RectMake(900, 100, 5 * 50, 3 * 25);
