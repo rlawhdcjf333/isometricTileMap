@@ -188,6 +188,9 @@ void MapToolScene::Init()
 	IMAGEMANAGER->LoadFromFile(L"Tree3", ResourcesObject(L"Tree3.bmp"), 92, 190, true);
 	IMAGEMANAGER->LoadFromFile(L"Tree9", ResourcesObject(L"Tree9.bmp"), 344, 290, true);
 	IMAGEMANAGER->LoadFromFile(L"Bush6", ResourcesObject(L"Bush6.bmp"), 57, 48, true);
+	IMAGEMANAGER->LoadFromFile(L"Stage1DeactivateHeadDoor", ResourcesObject(L"Stage1DeactivateHeadDoor.bmp"), 176, 129, true);
+	IMAGEMANAGER->LoadFromFile(L"Stage1DeactivateItemDoor", ResourcesObject(L"Stage1DeactivateItemDoor.bmp"), 199, 129, true);
+	IMAGEMANAGER->LoadFromFile(L"Stage1DeactivateMoneyDoor", ResourcesObject(L"Stage1DeactivateMoneyDoor.bmp"), 215, 159, true);
 	mImage = IMAGEMANAGER->FindImage(L"Tiles");
 
 	for (int y = 0; y < 75; y++) // 타일 레이어 도화지
@@ -238,6 +241,9 @@ void MapToolScene::Init()
 	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Tree3"), 350, 70));
 	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Tree9"), 400, 70));
 	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Bush6"), 450, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Stage1DeactivateHeadDoor"), 500, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Stage1DeactivateItemDoor"), 550, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Stage1DeactivateMoneyDoor"), 600, 70));
 	mMapObjectPallete.push_back(tmp);
 
 	mPalletRc = RectMake(900, 100, 5 * 50, 3 * 25);
