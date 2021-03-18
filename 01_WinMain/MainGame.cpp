@@ -66,7 +66,7 @@ void MainGame::Render(HDC hdc)
 	// ==================================================
 	{
 		SceneManager::GetInstance()->Render(backDC);
-		mCursorImage->Render(backDC, nonC_mousePosition.x, nonC_mousePosition.y);
+		mCursorImage->Render(backDC, nonC_mousePosition.x+5, nonC_mousePosition.y+5);
 		//RenderTime(backDC);
 	}
 	//====================================================

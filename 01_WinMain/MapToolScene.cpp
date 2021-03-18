@@ -171,6 +171,7 @@ void MapToolScene::ChangeLayer()
 	{
 		mCurrentLayer = Layer::Tile;
 	}
+	mCurrentPallete = nullptr;
 }
 
 void MapToolScene::stackClear(stack<ICommand*>* stack)
@@ -183,10 +184,10 @@ void MapToolScene::stackClear(stack<ICommand*>* stack)
 void MapToolScene::Init()
 {
 	IMAGEMANAGER->LoadFromFile(L"Tiles", Resources(L"tile_test.bmp"), 372, 372, 3,6, true);
-	IMAGEMANAGER->LoadFromFile(L"ForestObject", Resources(L"forestObject.bmp"), 360, 300, 3, 5, true);
-	IMAGEMANAGER->LoadFromFile(L"Tree1", ResourcesObject(L"Tree1.bmp"),200,167,true);
 	IMAGEMANAGER->LoadFromFile(L"Tree2", ResourcesObject(L"Tree2.bmp"), 86, 142, true);
 	IMAGEMANAGER->LoadFromFile(L"Tree3", ResourcesObject(L"Tree3.bmp"), 92, 190, true);
+	IMAGEMANAGER->LoadFromFile(L"Tree9", ResourcesObject(L"Tree9.bmp"), 344, 290, true);
+	IMAGEMANAGER->LoadFromFile(L"Bush6", ResourcesObject(L"Bush6.bmp"), 57, 48, true);
 	mImage = IMAGEMANAGER->FindImage(L"Tiles");
 
 	for (int y = 0; y < 75; y++) // 타일 레이어 도화지
@@ -233,7 +234,10 @@ void MapToolScene::Init()
 		mPalleteList.push_back(tmp);
 	}
 	vector <MapObjectPallete*> tmp;
-	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Tree3"), 900, 100));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Tree2"), 300, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Tree3"), 350, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Tree9"), 400, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Bush6"), 450, 70));
 	mMapObjectPallete.push_back(tmp);
 
 	mPalletRc = RectMake(900, 100, 5 * 50, 3 * 25);
@@ -243,7 +247,7 @@ void MapToolScene::Init()
 	mRedo = new Button(L"되돌리기 취소", 780, 25, 200, 50, [this]() {Redo();});
 	mNext = new Button(L"게임로드", 990, 25, 200, 50, []() {SceneManager::GetInstance()->LoadScene(L"GameScene");});
 	mChangeLayer = new Button(L"레이어 변경", 150, 80, 200, 50, [this]() {ChangeLayer(); });
-	mMenuRc = RectMake(150, 25, 1190, 150);
+	mMenuRc = RectMake(0, 0, 1280, 180);
 	CameraManager::GetInstance()->GetMainCamera()->ChangeMode(Camera::Mode::Free);
 	CAMERA->SetX(StartX);
 	CAMERA->SetY(StartY);
@@ -319,7 +323,11 @@ void MapToolScene::Update()
 	if (INPUT->GetKeyDown(VK_ESCAPE)) {
 		mRenderToggle = !mRenderToggle;
 	}
-	if (mCurrentPallete and INPUT->GetKeyDown(VK_RBUTTON))
+
+	if (mCurrentLayer != Layer::Tile) mCurrentPallete= nullptr;	//레이어 바꿀 때 마다 현재 들고 있는 팔레트 초기화
+	if (mCurrentLayer != Layer::Object) mCurrentMapObjectPallete = nullptr;
+
+	if (mCurrentPallete and INPUT->GetKeyDown(VK_RBUTTON)) //타일 타입 바꾸기
 	{
 		mCurrentPallete->SetType(TileType((int)mCurrentPallete->GetType() + 1));
 		if (mCurrentPallete->GetType() == TileType::End)
@@ -399,6 +407,7 @@ void MapToolScene::Update()
 
 void MapToolScene::Render(HDC hdc)
 {
+	
 	for (int y = 0; y < mTileList.size(); y++)
 	{
 		for (int x = 0; x < mTileList[y].size(); x++)
@@ -427,6 +436,7 @@ void MapToolScene::Render(HDC hdc)
 	{
 		mCurrentTile->SelectRender(hdc);
 	}
+	RenderRect(hdc, mMenuRc);
 	if (mCurrentPallete)
 	{
 		mCurrentPallete->Render(hdc, _mousePosition.x - 25, _mousePosition.y - 12);
@@ -443,6 +453,7 @@ void MapToolScene::Render(HDC hdc)
 			TextOut(hdc, 50, 100, text.c_str(), text.length());
 		}
 	}
+	
 	if (mCurrentMapObjectPallete)
 	{
 		mCurrentMapObjectPallete->Render(hdc, _mousePosition.x - 25, _mousePosition.y - 12);
@@ -485,4 +496,5 @@ void MapToolScene::Render(HDC hdc)
 			}
 		}
 	}
+
 }
