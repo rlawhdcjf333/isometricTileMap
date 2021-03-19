@@ -202,11 +202,11 @@ void MapToolScene::Init()
 			( 
 				new Tile
 				(
-				nullptr,
+				mImage,
 				StartX+(x-y)*TileSizeX/2,
 				StartY+(x+y)*TileSizeY/2, 
-				0,
-				0,
+				2,
+				4,
 				TileSizeX,
 				TileSizeY,
 				x,
@@ -254,10 +254,12 @@ void MapToolScene::Init()
 	mNext = new Button(L"게임로드", 990, 25, 200, 50, []() {SceneManager::GetInstance()->LoadScene(L"GameScene");});
 	mChangeLayer = new Button(L"레이어 변경", 150, 80, 200, 50, [this]() {ChangeLayer(); });
 	mMenuRc = RectMake(0, 0, 1280, 180);
-	CameraManager::GetInstance()->GetMainCamera()->ChangeMode(Camera::Mode::Free);
+
+	CAMERA->ChangeMode(Camera::Mode::Free);
 	CAMERA->SetX(StartX);
 	CAMERA->SetY(StartY);
 	CAMERA->SetMoveSpeed(20.f);
+
 }
 
 void MapToolScene::Release()
@@ -270,6 +272,7 @@ void MapToolScene::Release()
 			SafeDelete(mTileList[y][x]);
 		}
 	}
+	mTileList.clear();
 	for (int y = 0; y < mPalleteList.size(); y++)
 	{
 		for (int x = 0; x < mPalleteList[y].size(); x++)
@@ -277,10 +280,12 @@ void MapToolScene::Release()
 			SafeDelete(mPalleteList[y][x]);
 		}
 	}
+	mPalleteList.clear();
 	for (MapObject* elem : mMapObjectList)
 	{
 		SafeDelete(elem);
 	}
+	mMapObjectList.clear();
 	while (!mCommandList.empty())
 	{
 		auto iter = mCommandList.top();

@@ -67,7 +67,7 @@ void MainGame::Render(HDC hdc)
 	{
 		SceneManager::GetInstance()->Render(backDC);
 		mCursorImage->Render(backDC, nonC_mousePosition.x+5, nonC_mousePosition.y+5);
-		//RenderTime(backDC);
+		RenderTime(backDC);
 	}
 	//====================================================
 	//후면버퍼 내용을 윈도우 창에 고속 복사
@@ -83,8 +83,8 @@ void MainGame::RenderTime(HDC hdc)
 	wstring strDeltaTime = L"DeltaTime : " + to_wstring(deltaTime);
 	wstring strFPS = L"FPS : " + to_wstring(fps);
 
-	TextOut(hdc, 10, 10, strWorldTime.c_str(), strWorldTime.length());
-	TextOut(hdc, 10, 25, strDeltaTime.c_str(), strDeltaTime.length());
-	TextOut(hdc, 10, 40, strFPS.c_str(), strFPS.length());
+	TextOut(hdc, 10, 200, strWorldTime.c_str(), strWorldTime.length());
+	TextOut(hdc, 10, 225, strDeltaTime.c_str(), strDeltaTime.length());
+	TextOut(hdc, 10, 240, strFPS.c_str(), strFPS.length());
 }
 

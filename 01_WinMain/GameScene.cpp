@@ -19,6 +19,7 @@ void GameScene::Init()
 void GameScene::Update()
 {
 	ObjectManager::GetInstance()->Update();
+	if (INPUT->GetKeyDown(VK_ESCAPE))SceneManager::GetInstance()->LoadScene(L"MapToolScene");
 }
 
 void GameScene::Render(HDC hdc)
@@ -46,6 +47,7 @@ void GameScene::Release()
 			SafeDelete(elemelem);
 		}
 	}
+	mTileList.clear();
 
 	Obj->Release();
 	
