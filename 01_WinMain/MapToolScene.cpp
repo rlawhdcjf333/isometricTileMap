@@ -170,7 +170,7 @@ void MapToolScene::ChangeLayer()
 	if (mCurrentLayer == Layer::End)
 	{
 		mCurrentLayer = Layer::Tile;
-	}
+	} 
 	mCurrentPallete = nullptr;
 }
 
@@ -191,6 +191,7 @@ void MapToolScene::Init()
 	IMAGEMANAGER->LoadFromFile(L"Stage1DeactivateHeadDoor", ResourcesObject(L"Stage1DeactivateHeadDoor.bmp"), 176, 129, true);
 	IMAGEMANAGER->LoadFromFile(L"Stage1DeactivateItemDoor", ResourcesObject(L"Stage1DeactivateItemDoor.bmp"), 199, 129, true);
 	IMAGEMANAGER->LoadFromFile(L"Stage1DeactivateMoneyDoor", ResourcesObject(L"Stage1DeactivateMoneyDoor.bmp"), 215, 159, true);
+	IMAGEMANAGER->LoadFromFile(L"witch", ResourcesObject(L"witch.bmp"), 90, 90, true);
 	mImage = IMAGEMANAGER->FindImage(L"Tiles");
 
 	for (int y = 0; y < 75; y++) // 타일 레이어 도화지
@@ -244,6 +245,7 @@ void MapToolScene::Init()
 	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Stage1DeactivateHeadDoor"), 500, 70));
 	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Stage1DeactivateItemDoor"), 550, 70));
 	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Stage1DeactivateMoneyDoor"), 600, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"witch"), 650, 70));
 	mMapObjectPallete.push_back(tmp);
 
 	mPalletRc = RectMake(900, 100, 5 * 50, 3 * 25);
@@ -299,7 +301,7 @@ void MapToolScene::Release()
 		SafeDelete(iter);
 		mRedoList.pop();
 	}
-
+	mRenderList.clear();
 	SafeDelete(mSave);
 	SafeDelete(mLoad);
 	SafeDelete(mUndo);
@@ -403,8 +405,8 @@ void MapToolScene::Update()
 		{ 
 			return a->GetY() < b->GetY();
 		};
-
-		sort(mMapObjectList.begin(), mMapObjectList.end(), comp);
+		mRenderList.assign(mMapObjectList.begin(), mMapObjectList.end());
+		sort(mRenderList.begin(), mRenderList.end(), comp);
 
 		mSave->Update();
 		mLoad->Update();
@@ -418,8 +420,7 @@ void MapToolScene::Update()
 
 void MapToolScene::Render(HDC hdc)
 {
-	
-	for (int y = 0; y < mTileList.size(); y++)
+	for (int y = 0; y < mTileList.size(); y++)//타일
 	{
 		for (int x = 0; x < mTileList[y].size(); x++)
 		{
@@ -434,7 +435,7 @@ void MapToolScene::Render(HDC hdc)
 			}
 		}
 	}
-	for (MapObject* elem : mMapObjectList)
+	for (MapObject* elem : mRenderList)//오브젝트
 	{
 		if (mCurrentLayer == Layer::Object) {
 			elem->Render(hdc);

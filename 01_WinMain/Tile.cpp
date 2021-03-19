@@ -15,24 +15,27 @@ Tile::Tile(Image* pImage, float x, float y, int frameX, int frameY, int sizeX, i
 
 void Tile::Render(HDC hdc)
 {
-	if (mImage)
+	if (CameraManager::GetInstance()->GetMainCamera()->IsInCameraArea(mRect))
 	{
-		CAMERA->ScaleFrameRender(hdc, mImage, mX, mY, mFrameX, mFrameY, mSizeX, mSizeY);
-		//mImage->ScaleFrameRender(hdc, mX, mY, mFrameX, mFrameY, mSizeX, mSizeY);
-		
-			
-	}
-	else
-	{
-		Gizmo::GetInstance()->DrawDiam(hdc, mDiam, Gizmo::Color::Green);
-	}
-	if (mAttackTest) {
-		mTestTime++;
-		if (mTestTime > 10) {
-			mTestTime = 0;
-			mAttackTest = false;
+		if (mImage)
+		{
+			CAMERA->ScaleFrameRender(hdc, mImage, mX, mY, mFrameX, mFrameY, mSizeX, mSizeY);
+			//mImage->ScaleFrameRender(hdc, mX, mY, mFrameX, mFrameY, mSizeX, mSizeY);
+
+
 		}
-		SelectRenderBlue(hdc);
+		else
+		{
+			Gizmo::GetInstance()->DrawDiam(hdc, mDiam, Gizmo::Color::Green);
+		}
+		if (mAttackTest) {
+			mTestTime++;
+			if (mTestTime > 10) {
+				mTestTime = 0;
+				mAttackTest = false;
+			}
+			SelectRenderBlue(hdc);
+		}
 	}
 }
 void Tile::AlphaRender(HDC hdc)

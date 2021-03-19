@@ -25,6 +25,26 @@ void GameScene::Update()
 void GameScene::Render(HDC hdc)
 {
 
+	//float a = CAMERA->GetRect().left;
+	//float b = CAMERA->GetRect().top;
+	//
+	//int x = b / TileSizeY + a / TileSizeX - (StartX / TileSizeX + StartY / TileSizeY);
+	//int y = b / TileSizeY - a / TileSizeX + (StartX / TileSizeX - StartY / TileSizeY);
+	//int offsetX = (int)a % TileSizeX;
+	//int offsetY = (int)b % TileSizeY;
+	//
+	//if (offsetY < TileSizeY / 2 - offsetX / 2) { x--; }
+	//if (offsetY < offsetX / 2 - TileSizeY / 2) { y--; }
+	//if (offsetY > offsetX / 2 + TileSizeY / 2) { y++; }
+	//if (offsetY > 3 * TileSizeY / 2 - offsetX / 2) { x++; }
+	//
+	//int k = x + y;
+	//
+	//for(y)
+	//if(x>=0 and y>=0)
+	//
+	//mTileList[y][x]->Render(hdc);
+
 	for (int y = 0; y < mTileList.size(); y++)
 	{
 		for (int x = 0; x < mTileList.size(); x++)

@@ -5,8 +5,8 @@
 
 bool TileList::MapAreaCheck(float a, float b)
 {
-	int x = a / TileSizeY + b / TileSizeX - (StartX / TileSizeX + StartY / TileSizeY);
-	int y = a / TileSizeY - b / TileSizeX + (StartX / TileSizeX - StartY / TileSizeY);
+	int x = b / TileSizeY + a / TileSizeX - (StartX / TileSizeX + StartY / TileSizeY);
+	int y = b / TileSizeY - a / TileSizeX + (StartX / TileSizeX - StartY / TileSizeY);
 	int offsetX = (LONG)a % TileSizeX;
 	int offsetY = (LONG)b % TileSizeY;
 
@@ -24,8 +24,8 @@ bool TileList::MapAreaCheck(float a, float b)
 
 bool TileList::MapAreaCheck(LONG a, LONG b)
 {
-	int x = a / TileSizeY + b / TileSizeX - (StartX / TileSizeX + StartY / TileSizeY);
-	int y = a / TileSizeY - b / TileSizeX + (StartX / TileSizeX - StartY / TileSizeY);
+	int x = b / TileSizeY + a / TileSizeX - (StartX / TileSizeX + StartY / TileSizeY);
+	int y = b / TileSizeY - a / TileSizeX + (StartX / TileSizeX - StartY / TileSizeY);
 	int offsetX = a % TileSizeX;
 	int offsetY = b % TileSizeY;
 

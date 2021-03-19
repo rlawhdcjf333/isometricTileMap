@@ -16,8 +16,9 @@ class MapToolScene  : public Scene
 	vector <vector<Tile*>> mTileList;
 	vector <vector<Pallete*>> mPalleteList;
 	vector <class MapObject*> mMapObjectList;
+	vector <MapObject*> mRenderList;
 	vector <vector<class MapObjectPallete*>> mMapObjectPallete;
-
+	
 	Tile* mCurrentTile;
 	Pallete* mCurrentPallete;
 	//MapObject* mCurrentMapObject;

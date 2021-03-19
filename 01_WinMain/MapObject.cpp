@@ -12,7 +12,10 @@ MapObject::MapObject(Image* image, int x, int y)
 
 void MapObject::Render(HDC hdc)
 {
-	CAMERA->Render(hdc, mImage, mRect.left, mRect.top);
+	if (CameraManager::GetInstance()->GetMainCamera()->IsInCameraArea(mRect))
+	{
+		CAMERA->Render(hdc, mImage, mRect.left, mRect.top);
+	}
 }
 void MapObject::AlphaRender(HDC hdc)
 {
