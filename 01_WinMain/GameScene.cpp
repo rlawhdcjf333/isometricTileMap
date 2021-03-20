@@ -20,18 +20,52 @@ void GameScene::Update()
 {
 	ObjectManager::GetInstance()->Update();
 	if (INPUT->GetKeyDown(VK_ESCAPE))SceneManager::GetInstance()->LoadScene(L"MapToolScene");
+
+	RECT cameraRect = CAMERA->GetRect();
+	float left = cameraRect.left;
+	float top = cameraRect.top;
+
+	x = (int)top / TileSizeY + (int)left / TileSizeX - (StartX / TileSizeX + StartY / TileSizeY);	//카메라 레프트 값에 대한 대략적인 인덱스값
+	y = (int)top / TileSizeY - (int)left / TileSizeX + (StartX / TileSizeX - StartY / TileSizeY);
+	offsetX = (int)left % TileSizeX;
+	offsetY = (int)top % TileSizeY;
+
+	if (offsetY < TileSizeY / 2 - offsetX / 2) { x--; }
+	if (offsetY < offsetX / 2 - TileSizeY / 2) { y--; }
+	if (offsetY > offsetX / 2 + TileSizeY / 2) { y++; }
+	if (offsetY > 3 * TileSizeY / 2 - offsetX / 2) { x++; }
 }
 
 void GameScene::Render(HDC hdc)
 {
-
-	for (int y = 0; y < mTileList.size(); y++)
+	if (x >= 1 and x < 75 and y >= 1 and y < 75)
 	{
-		for (int x = 0; x < mTileList.size(); x++)
+		if (mTileList[y - 1][x - 1])
 		{
-			mTileList[y][x]->Render(hdc);
+			//일단 카메라기준으로 레프트탑 타일을 가져옴 융통성 있게 x좌표 만큼 좀 뺌 (22,24)
+			for (int j = 0; j < 26; j++)
+			{
+				for (int i = 0; i < 23; i++)
+				{
+					if (y - 1 - i + j < 0 || x - 1 + i + j>74 ||
+						y - 1 - i + j > 74 || x - 1 + i + j < 0 ||
+						y - 1 - i + j + 1 < 0 || y - 1 - i + j + 1 > 74)
+						continue;
+	
+						mTileList[y - 1 - i + j][x - 1 + i + j]->Render(hdc);
+						mTileList[y - 1 - i + j + 1][x - 1 + i + j]->Render(hdc);
+				}
+			}
 		}
 	}
+
+	//for (int y = 0; y < mTileList.size(); y++)
+	//{
+	//	for (int x = 0; x < mTileList.size(); x++)
+	//	{
+	//		mTileList[y][x]->Render(hdc);
+	//	}
+	//}
 
 	SetBkMode(hdc, TRANSPARENT);
 	TextOut(hdc, 800, 100, L"이동: 우클릭, 꾹 누르고 있어도 됨.", 21);

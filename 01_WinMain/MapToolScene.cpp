@@ -422,9 +422,6 @@ void MapToolScene::Update()
 void MapToolScene::Render(HDC hdc)
 {
 	RECT cameraRect = CAMERA->GetRect();
-	//타일 x,y 좌표 70
-	//StartX + (x - y) * TileSizeX / 2,
-	//StartY + (x + y) * TileSizeY / 2,
 	float left = cameraRect.left;
 	float top = cameraRect.top;
 
@@ -442,21 +439,50 @@ void MapToolScene::Render(HDC hdc)
 
 
 
-	for (int y = 0; y < mTileList.size(); y++)//타일
+	//for (int y = 0; y < mTileList.size(); y++)//타일
+	//{
+	//	for (int x = 0; x < mTileList[y].size(); x++)
+	//	{
+	//		if (mCurrentLayer == Layer::Tile) {
+	//			mTileList[y][x]->Render(hdc);
+	//		}
+	//		else {
+	//			mTileList[y][x]->AlphaRender(hdc);
+	//		}
+	//		if (!mRenderToggle) {
+	//			mTileList[y][x]->SelectRenderMargenta(hdc);
+	//		}
+	//	}
+	//}
+	if (x >= 1 and x < 75 and y >= 1 and y < 75)
 	{
-		for (int x = 0; x < mTileList[y].size(); x++)
+		if (mTileList[y - 1][x - 1])
 		{
-			if (mCurrentLayer == Layer::Tile) {
-				mTileList[y][x]->Render(hdc);
-			}
-			else {
-				mTileList[y][x]->AlphaRender(hdc);
-			}
-			if (!mRenderToggle) {
-				mTileList[y][x]->SelectRenderMargenta(hdc);
+			//일단 카메라기준으로 레프트탑 타일을 가져옴 융통성 있게 x좌표 만큼 좀 뺌 (22,24)
+			for (int j = 0; j < 26; j++)
+			{
+				for (int i = 0; i < 23; i++)
+				{
+					if (y - 1 - i + j < 0 || x - 1 + i + j>74 ||
+						y - 1 - i + j > 74 || x - 1 + i + j < 0 ||
+						y - 1 - i + j + 1 < 0 || y - 1 - i + j + 1 > 74)
+						continue;
+					if (mCurrentLayer == Layer::Tile)
+					{
+						mTileList[y - 1 - i + j][x - 1 + i + j]->Render(hdc);
+						mTileList[y - 1 - i + j + 1][x - 1 + i + j]->Render(hdc);
+					}
+					else
+					{
+						mTileList[y - 1 - i + j][x - 1 + i + j]->AlphaRender(hdc);
+						mTileList[y - 1 - i + j + 1][x - 1 + i + j]->AlphaRender(hdc);
+					}
+
+				}
 			}
 		}
 	}
+
 	for (MapObject* elem : mRenderList)//오브젝트
 	{
 		if (mCurrentLayer == Layer::Object) {
@@ -531,25 +557,5 @@ void MapToolScene::Render(HDC hdc)
 		}
 	}
 
-	if (x >= 1 and x < 75 and y >= 1 and y < 75)
-	{
-		if (mTileList[y-1][x - 1])
-		{
-					//일단 카메라기준으로 레프트탑 타일을 가져옴 융통성 있게 x좌표 만큼 좀 뺌 (22,24)
-			for (int j = 0; j < 5; j++)
-			{
-				for (int i = 0; i < 23; i++)
-				{
-					if (y - 1 - i+j < 0 || x - 1 + i>74||
-						y - 1 - i + j > 74 || x - 1 + i<0)
-						continue;
-					mTileList[y -1- i+j][x - 1 + i]->Render(hdc);
-				}
-			}
-		}
-	}
-	//if (mRenderStartTile)
-	//{
-	//	mRenderStartTile->Render(hdc);
-	//}
+	
 }
