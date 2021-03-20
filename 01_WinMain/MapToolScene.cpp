@@ -6,6 +6,7 @@
 #include "Pallete.h"
 #include "MapObject.h"
 #include "MapObjectPallete.h"
+#include "Camera.h"
 
 void MapToolScene::RegisterCommand(ICommand* command)
 {
@@ -420,6 +421,27 @@ void MapToolScene::Update()
 
 void MapToolScene::Render(HDC hdc)
 {
+	RECT cameraRect = CAMERA->GetRect();
+	//타일 x,y 좌표 70
+	//StartX + (x - y) * TileSizeX / 2,
+	//StartY + (x + y) * TileSizeY / 2,
+	float left = cameraRect.left;
+	float top = cameraRect.top;
+
+	int x = (int)top / TileSizeY + (int)left / TileSizeX - (StartX / TileSizeX + StartY / TileSizeY);	//카메라 레프트 값에 대한 대략적인 인덱스값
+	int y = (int)top / TileSizeY - (int)left / TileSizeX + (StartX / TileSizeX - StartY / TileSizeY);
+	int offsetX = (int)left % TileSizeX;
+	int offsetY = (int)top % TileSizeY;
+
+	if (offsetY < TileSizeY / 2 - offsetX / 2) { x--; }
+	if (offsetY < offsetX / 2 - TileSizeY / 2) { y--; }
+	if (offsetY > offsetX / 2 + TileSizeY / 2) { y++; }
+	if (offsetY > 3 * TileSizeY / 2 - offsetX / 2) { x++; }
+
+	
+
+
+
 	for (int y = 0; y < mTileList.size(); y++)//타일
 	{
 		for (int x = 0; x < mTileList[y].size(); x++)
@@ -509,4 +531,25 @@ void MapToolScene::Render(HDC hdc)
 		}
 	}
 
+	if (x >= 1 and x < 75 and y >= 1 and y < 75)
+	{
+		if (mTileList[y-1][x - 1])
+		{
+					//일단 카메라기준으로 레프트탑 타일을 가져옴 융통성 있게 x좌표 만큼 좀 뺌 (22,24)
+			for (int j = 0; j < 5; j++)
+			{
+				for (int i = 0; i < 23; i++)
+				{
+					if (y - 1 - i+j < 0 || x - 1 + i>74||
+						y - 1 - i + j > 74 || x - 1 + i<0)
+						continue;
+					mTileList[y -1- i+j][x - 1 + i]->Render(hdc);
+				}
+			}
+		}
+	}
+	//if (mRenderStartTile)
+	//{
+	//	mRenderStartTile->Render(hdc);
+	//}
 }
