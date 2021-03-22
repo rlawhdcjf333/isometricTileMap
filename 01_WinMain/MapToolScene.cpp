@@ -406,7 +406,7 @@ void MapToolScene::Update()
 		{ 
 			return a->GetY() < b->GetY();
 		};
-		mRenderList.assign(mMapObjectList.begin(), mMapObjectList.end());
+		mRenderList.assign(mMapObjectList.begin(), mMapObjectList.end());		//랜더리스트에 넣어서 sort로 z오더를 기준으로 재정렬
 		sort(mRenderList.begin(), mRenderList.end(), comp);
 
 		mSave->Update();
@@ -435,53 +435,50 @@ void MapToolScene::Render(HDC hdc)
 	if (offsetY > offsetX / 2 + TileSizeY / 2) { y++; }
 	if (offsetY > 3 * TileSizeY / 2 - offsetX / 2) { x++; }
 
-	
-
-
-
-	//for (int y = 0; y < mTileList.size(); y++)//타일
-	//{
-	//	for (int x = 0; x < mTileList[y].size(); x++)
-	//	{
-	//		if (mCurrentLayer == Layer::Tile) {
-	//			mTileList[y][x]->Render(hdc);
-	//		}
-	//		else {
-	//			mTileList[y][x]->AlphaRender(hdc);
-	//		}
-	//		if (!mRenderToggle) {
-	//			mTileList[y][x]->SelectRenderMargenta(hdc);
-	//		}
-	//	}
-	//}
-	if (x >= 1 and x < 75 and y >= 1 and y < 75)
+	for (int y = 0; y < mTileList.size(); y++)//타일
 	{
-		if (mTileList[y - 1][x - 1])
+		for (int x = 0; x < mTileList[y].size(); x++)
 		{
-			//일단 카메라기준으로 레프트탑 타일을 가져옴 융통성 있게 x좌표 만큼 좀 뺌 (22,24)
-			for (int j = 0; j < 26; j++)
-			{
-				for (int i = 0; i < 23; i++)
-				{
-					if (y - 1 - i + j < 0 || x - 1 + i + j>74 ||
-						y - 1 - i + j > 74 || x - 1 + i + j < 0 ||
-						y - 1 - i + j + 1 < 0 || y - 1 - i + j + 1 > 74)
-						continue;
-					if (mCurrentLayer == Layer::Tile)
-					{
-						mTileList[y - 1 - i + j][x - 1 + i + j]->Render(hdc);
-						mTileList[y - 1 - i + j + 1][x - 1 + i + j]->Render(hdc);
-					}
-					else
-					{
-						mTileList[y - 1 - i + j][x - 1 + i + j]->AlphaRender(hdc);
-						mTileList[y - 1 - i + j + 1][x - 1 + i + j]->AlphaRender(hdc);
-					}
-
-				}
+			if (mCurrentLayer == Layer::Tile) {
+				mTileList[y][x]->Render(hdc);
+			}
+			else {
+				mTileList[y][x]->AlphaRender(hdc);
+			}
+			if (!mRenderToggle) {
+				mTileList[y][x]->SelectRenderMargenta(hdc);
 			}
 		}
 	}
+
+	//if (x >= 1 and x < 75 and y >= 1 and y < 75)
+	//{
+	//	if (mTileList[y - 1][x - 1])
+	//	{
+	//		//일단 카메라기준으로 레프트탑 타일을 가져옴 융통성 있게 x좌표 만큼 좀 뺌 (22,24)
+	//		for (int j = 0; j < 26; j++)
+	//		{
+	//			for (int i = 0; i < 23; i++)
+	//			{
+	//				if (y - 1 - i + j < 0 || x - 1 + i + j>74 ||
+	//					y - 1 - i + j > 74 || x - 1 + i + j < 0 ||
+	//					y - 1 - i + j + 1 < 0 || y - 1 - i + j + 1 > 74)
+	//					break;
+	//				if (mCurrentLayer == Layer::Tile)
+	//				{
+	//					mTileList[y - 1 - i + j][x - 1 + i + j]->Render(hdc);
+	//					mTileList[y - 1 - i + j + 1][x - 1 + i + j]->Render(hdc);
+	//				}
+	//				else
+	//				{
+	//					mTileList[y - 1 - i + j][x - 1 + i + j]->AlphaRender(hdc);
+	//					mTileList[y - 1 - i + j + 1][x - 1 + i + j]->AlphaRender(hdc);
+	//				}
+	//
+	//			}
+	//		}
+	//	}
+	//}
 
 	for (MapObject* elem : mRenderList)//오브젝트
 	{

@@ -23,12 +23,17 @@ bool PathFinder::FindPath(const vector<vector<class Tile*>>& tileList, vector<Ti
 	int tileCountY = tileList.size();	//¼¼·Î Å¸ÀÏ ¼ö 
 	int tileCountX = tileList[0].size();	//°¡·Î Å¸ÀÏ ¼ö 
 
-	// {{ ÇØ´ç ÇÔ¼ö¿¡ °ªÀ» Àß¸ø ³Ö¾ú´Ù¸é 
-	if (startIndexX < 0 || startIndexX >= tileCountX)return false;
-	if (startIndexY < 0 || startIndexY >= tileCountY)return false;
-	if (arrivalX < 0 || arrivalX >= tileCountY)return false;
-	if (arrivalY < 0 || arrivalY >= tileCountY)return false;
-	// }} 
+//	// {{ ÇØ´ç ÇÔ¼ö¿¡ °ªÀ» Àß¸ø ³Ö¾ú´Ù¸é 
+//	if (startIndexX < 0 || startIndexX >= tileCountX)return false;
+//	if (startIndexY < 0 || startIndexY >= tileCountY)return false;
+//	if (arrivalX < 0 || arrivalX >= tileCountY)return false;
+//	if (arrivalY < 0 || arrivalY >= tileCountY)return false;
+	if(startIndexX+startIndexY<41)return false;
+	if (startIndexX + startIndexY > 110)return false;
+	if (arrivalX + arrivalY < 41)return false;
+	if (arrivalX + arrivalY > 110)return false;
+//	// }} 
+
 
 	//vector<vector<DummyTile>> dummyList;	// ¿¡ÀÌ½ºÅ¸ ¿¬»ê µµ¿ÍÁÙ ´õ¹Ì Å¸ÀÏ ¸®½ºÆ®
 	// {{ 2Â÷¿ø ´õ¹Ì Å¸ÀÏ ¼¼ÆÃ ~
@@ -72,8 +77,8 @@ bool PathFinder::FindPath(const vector<vector<class Tile*>>& tileList, vector<Ti
 		if (currentTile == nullptr)return false;
 		int currentIndexX = currentTile->GetIndexX();
 		int currentIndexY = currentTile->GetIndexY();
+		
 		// {{ ÁÖº¯ 8°³ Å¸ÀÏ °Ë»ç~
-
 		for (int y = currentIndexY - 1; y <= currentIndexY + 1; ++y)
 		{
 			if (y < 0 || y >= tileCountY)continue;
@@ -94,6 +99,18 @@ bool PathFinder::FindPath(const vector<vector<class Tile*>>& tileList, vector<Ti
 					dummyList[y][x].IsOpen = true;
 					continue;
 				}
+
+				//ÆÈ¹æ ®c ÇÊ¿äÇÏ¸é ¾²¼À
+				//if (tileList[y - 1][x - 1]->GetType() == TileType::Block && tileList[y][x - 1]->GetType() == TileType::Block &&
+				//	tileList[y - 1][x]->GetType() == TileType::Block && tileList[y + 1][x - 1]->GetType() == TileType::Block &&
+				//	tileList[y - 1][x + 1]->GetType() == TileType::Block && tileList[y + 1][x]->GetType() == TileType::Block &&
+				//	tileList[y][x + 1]->GetType() == TileType::Block && tileList[y + 1][x + 2]->GetType() == TileType::Block)
+				//{
+				//	dummyList[y][x].IsClose = true;
+				//	dummyList[y][x].IsOpen = true;
+				//	continue;
+				//}
+
 				//°Ë»çÇÏ·Á´Â Å¸ÀÏÀÌ Ã³À½ °Ë»çÇÏ´Â Å¸ÀÏÀÌ¶ó¸é 
 				if (dummyList[y][x].IsOpen == false)
 				{

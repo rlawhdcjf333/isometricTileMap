@@ -24,7 +24,6 @@ void GameScene::Update()
 	RECT cameraRect = CAMERA->GetRect();
 	float left = cameraRect.left;
 	float top = cameraRect.top;
-
 	x = (int)top / TileSizeY + (int)left / TileSizeX - (StartX / TileSizeX + StartY / TileSizeY);	//카메라 레프트 값에 대한 대략적인 인덱스값
 	y = (int)top / TileSizeY - (int)left / TileSizeX + (StartX / TileSizeX - StartY / TileSizeY);
 	offsetX = (int)left % TileSizeX;
@@ -42,7 +41,7 @@ void GameScene::Render(HDC hdc)
 	{
 		if (mTileList[y - 1][x - 1])
 		{
-			//일단 카메라기준으로 레프트탑 타일을 가져옴 융통성 있게 x좌표 만큼 좀 뺌 (22,24)
+			//일단 카메라기준으로 레프트탑 타일을 가져옴 융통성 있게 x좌표 y좌표 1 만큼 좀 뺌 (22,24)
 			for (int j = 0; j < 26; j++)
 			{
 				for (int i = 0; i < 23; i++)
@@ -50,7 +49,7 @@ void GameScene::Render(HDC hdc)
 					if (y - 1 - i + j < 0 || x - 1 + i + j>74 ||
 						y - 1 - i + j > 74 || x - 1 + i + j < 0 ||
 						y - 1 - i + j + 1 < 0 || y - 1 - i + j + 1 > 74)
-						continue;
+						break;
 	
 						mTileList[y - 1 - i + j][x - 1 + i + j]->Render(hdc);
 						mTileList[y - 1 - i + j + 1][x - 1 + i + j]->Render(hdc);

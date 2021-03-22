@@ -60,14 +60,19 @@ void ObjectManager::Update()
 	}
 	IntersectObject();
 
+	RECT cameraRect = CAMERA->GetRect();
 	mRenderList.clear();
 	for (int i = 0; i < (int)ObjectLayer::End; i++)
 	{
 		if (i == 0) continue;
 
-		for (GameObject* elem : mObjectList[(ObjectLayer)i])
+		for (GameObject* elem : mObjectList[(ObjectLayer)i])	//오브젝트 리스트에서 오브젝트 레이어 애들만 포문으로 넣는다.
 		{
-			mRenderList.push_back(elem);
+			if (elem->GetRect().left<cameraRect.right && elem->GetRect().right > cameraRect.left)
+			{
+				mRenderList.push_back(elem);
+			}
+			
 		}
 
 	}
@@ -84,17 +89,17 @@ void ObjectManager::Update()
 
 void ObjectManager::Render(HDC hdc)
 {
-	ObjectIter iter = mObjectList.begin();
-	for (; iter != mObjectList.end(); ++iter)
-	{
-		for (int i = 0; i < iter->second.size(); ++i)
-		{
-			if (iter->second[i]->GetIsActive() == true)
-			{	
-				iter->second[i]->Render(hdc);
-			}
-		}
-	}
+	//ObjectIter iter = mObjectList.begin();
+	//for (; iter != mObjectList.end(); ++iter)
+	//{
+	//	for (int i = 0; i < iter->second.size(); ++i)
+	//	{
+	//		if (iter->second[i]->GetIsActive() == true)
+	//		{	
+	//			iter->second[i]->Render(hdc);
+	//		}
+	//	}
+	//}
 
 	for (GameObject* elem : mObjectList[ObjectLayer::Background])
 	{
