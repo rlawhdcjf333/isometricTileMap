@@ -193,6 +193,15 @@ void MapToolScene::Init()
 	IMAGEMANAGER->LoadFromFile(L"Stage1DeactivateItemDoor", ResourcesObject(L"Stage1DeactivateItemDoor.bmp"), 199, 129, true);
 	IMAGEMANAGER->LoadFromFile(L"Stage1DeactivateMoneyDoor", ResourcesObject(L"Stage1DeactivateMoneyDoor.bmp"), 215, 159, true);
 	IMAGEMANAGER->LoadFromFile(L"witch", ResourcesObject(L"witch.bmp"), 90, 90, true);
+	IMAGEMANAGER->LoadFromFile(L"Branch1", ResourcesObject(L"Branch1.bmp"), 38, 23, true);
+	IMAGEMANAGER->LoadFromFile(L"Branch2", ResourcesObject(L"Branch2.bmp"), 41, 22, true);
+	IMAGEMANAGER->LoadFromFile(L"Branch3", ResourcesObject(L"Branch3.bmp"), 106, 67, true);
+	IMAGEMANAGER->LoadFromFile(L"Branch4", ResourcesObject(L"Branch4.bmp"), 106, 67, true);
+	IMAGEMANAGER->LoadFromFile(L"Door1_1", ResourcesObject(L"Door1_1.bmp"), 80, 279, true);
+	IMAGEMANAGER->LoadFromFile(L"Door1_2", ResourcesObject(L"Door1_2.bmp"), 80, 279, true);
+	IMAGEMANAGER->LoadFromFile(L"Door2_1", ResourcesObject(L"Door2_1.bmp"), 80, 279, true);
+	IMAGEMANAGER->LoadFromFile(L"Door2_2", ResourcesObject(L"Door2_2.bmp"), 80, 279, true);
+
 	mImage = IMAGEMANAGER->FindImage(L"Tiles");
 
 	for (int y = 0; y < 75; y++) // 타일 레이어 도화지
@@ -238,6 +247,7 @@ void MapToolScene::Init()
 		}
 		mPalleteList.push_back(tmp);
 	}
+
 	vector <MapObjectPallete*> tmp;
 	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Tree2"), 300, 70));
 	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Tree3"), 350, 70));
@@ -247,6 +257,14 @@ void MapToolScene::Init()
 	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Stage1DeactivateItemDoor"), 550, 70));
 	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Stage1DeactivateMoneyDoor"), 600, 70));
 	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"witch"), 650, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Branch1"), 700, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Branch2"), 750, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Branch3"), 800, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Branch4"), 850, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Door1_1"), 900, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Door1_2"), 950, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Door2_1"), 1000, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Door2_2"), 1050, 70));
 	mMapObjectPallete.push_back(tmp);
 
 	mPalletRc = RectMake(900, 100, 5 * 50, 3 * 25);

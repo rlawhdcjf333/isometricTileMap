@@ -9,7 +9,7 @@ void GameScene::Init()
 	MapLoad();
 	
 	Obj->AddObject(ObjectLayer::Player, new Player(30, 30, 30, 30));
-	Obj->AddObject(ObjectLayer::Enemy,new Dumb());
+	//Obj->AddObject(ObjectLayer::Enemy,new Dumb());
 	Obj->Init();
 
 	CAMERA->ChangeMode(Camera::Mode::Follow);

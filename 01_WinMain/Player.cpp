@@ -83,8 +83,11 @@ void Player::Update()
 	{
 		if (Input::GetInstance()->GetKey(VK_RBUTTON) and mTileSelect) //대쉬 중이 아닐 경우에만 클릭 이동 활성화 == 대쉬 중에 이동캔슬 안됨
 		{
-			if (PathFinder::GetInstance()->FindPath(TILE, mPath, mIndexX, mIndexY,
-				mTileSelect->GetIndexX(), mTileSelect->GetIndexY())) mPathIndex = 1;
+			if (TILE[mTileSelect->GetIndexY()][mTileSelect->GetIndexX()]->GetType() != TileType::Block)
+			{
+				if (PathFinder::GetInstance()->FindPath(TILE, mPath, mIndexX, mIndexY,
+					mTileSelect->GetIndexX(), mTileSelect->GetIndexY())) mPathIndex = 1;
+			}
 		}
 		Move(mSpeed);
 	}
