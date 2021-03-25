@@ -14,7 +14,7 @@ void GameScene::Init()
 
 	CAMERA->ChangeMode(Camera::Mode::Follow);
 	CAMERA->SetTarget(Obj->FindObject("player"));
-	IMAGEMANAGER->LoadFromFile(L"back", Resources(L"back.bmp"), 1280, 740, false);
+	IMAGEMANAGER->LoadFromFile(L"back", Resources(L"back1.bmp"), 1280, 740, false);
 	mBack = new Image;
 	mBack = IMAGEMANAGER->FindImage(L"back");
 }
