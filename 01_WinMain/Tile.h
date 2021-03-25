@@ -21,6 +21,7 @@ class Tile
 	int mSizeY;
 	int mIndexX;
 	int mIndexY;
+	int mZaxis;
 	RECT mRect;
 	Diam mDiam;
 	TileType mTileType;
@@ -35,6 +36,9 @@ public:
 	void SelectRender(HDC hdc);
 	void SelectRenderBlue(HDC hdc);
 	void SelectRenderMargenta(HDC hdc);
+
+	int GetZaxis() { return mZaxis; }
+	void SetZaxis(int zaxis) { mZaxis = zaxis; }
 	
 	Image* GetImage() { return mImage; }
 	void SetImage(Image* pImage) { mImage = pImage; }

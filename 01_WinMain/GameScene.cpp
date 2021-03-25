@@ -14,6 +14,9 @@ void GameScene::Init()
 
 	CAMERA->ChangeMode(Camera::Mode::Follow);
 	CAMERA->SetTarget(Obj->FindObject("player"));
+	IMAGEMANAGER->LoadFromFile(L"back", Resources(L"back.bmp"), 1280, 740, false);
+	mBack = new Image;
+	mBack = IMAGEMANAGER->FindImage(L"back");
 }
 
 void GameScene::Update()
@@ -37,6 +40,7 @@ void GameScene::Update()
 
 void GameScene::Render(HDC hdc)
 {
+	mBack->Render(hdc, 0, 0);
 	if (x >= 1 and x < 75 and y >= 1 and y < 75)
 	{
 		if (mTileList[y - 1][x - 1])
@@ -57,7 +61,7 @@ void GameScene::Render(HDC hdc)
 			}
 		}
 	}
-
+	
 	//for (int y = 0; y < mTileList.size(); y++)
 	//{
 	//	for (int x = 0; x < mTileList.size(); x++)
@@ -123,6 +127,7 @@ void GameScene:: MapLoad()
 				int frameX;
 				int frameY;
 				int type;
+				int zaxis;
 				string buffer;
 
 				getline(loadStream, buffer, ',');
@@ -131,8 +136,10 @@ void GameScene:: MapLoad()
 				frameX = stoi(buffer);
 				getline(loadStream, buffer, ',');
 				frameY = stoi(buffer);
-				getline(loadStream, buffer);
+				getline(loadStream, buffer, ',');
 				type = stoi(buffer);
+				getline(loadStream, buffer);
+				zaxis = stoi(buffer);
 
 				wstring wstr;
 				wstr.assign(key.begin(), key.end());
@@ -140,6 +147,7 @@ void GameScene:: MapLoad()
 				mTileList[y][x]->SetFrameX(frameX);
 				mTileList[y][x]->SetFrameY(frameY);
 				mTileList[y][x]->SetType((TileType)type);
+				mTileList[y][x]->SetZaxis(zaxis);
 			}
 		}
 	}

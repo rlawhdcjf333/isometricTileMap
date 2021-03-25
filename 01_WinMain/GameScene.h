@@ -11,6 +11,7 @@ public:
 	int y;
 	int offsetX;
 	int offsetY;
+	class Image* mBack;
 	void Init()override;
 	void Update()override;
 	void Render(HDC hdc)override;

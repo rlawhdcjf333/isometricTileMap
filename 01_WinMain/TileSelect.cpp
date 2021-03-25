@@ -28,6 +28,10 @@ void TileSelect::Update()
 	{
 		mCurrentTile = TILE[y][x];
 	}
+	else
+	{
+
+	}
 }
 
 void TileSelect::Render(HDC hdc)

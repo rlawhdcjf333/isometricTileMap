@@ -35,6 +35,7 @@ void ObjectManager::Release()
 		}
 	}
 	mObjectList.clear();
+	mRenderList.clear();
 }
 
 void ObjectManager::Update()
@@ -112,7 +113,8 @@ void ObjectManager::Render(HDC hdc)
 	{
 		if (elem->GetIsActive() == true)
 		{
-			elem->Render(hdc);
+
+				elem->Render(hdc);
 		}
 	}
 

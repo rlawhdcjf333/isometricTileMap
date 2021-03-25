@@ -12,7 +12,7 @@ class ICommand;
 class MapToolScene  : public Scene
 {
 	Image* mImage;
-
+	int zaxis;
 	vector <vector<Tile*>> mTileList;
 	vector <vector<Pallete*>> mPalleteList;
 	vector <class MapObject*> mMapObjectList;
@@ -20,6 +20,7 @@ class MapToolScene  : public Scene
 	vector <vector<class MapObjectPallete*>> mMapObjectPallete;
 	
 	Tile* mCurrentTile;
+	class TileSelect* mTileSelect;
 	Pallete* mCurrentPallete;
 	//MapObject* mCurrentMapObject;
 	MapObjectPallete* mCurrentMapObjectPallete;

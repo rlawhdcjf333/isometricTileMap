@@ -7,6 +7,7 @@
 #include "MapObject.h"
 #include "MapObjectPallete.h"
 #include "Camera.h"
+#include "TileSelect.h"
 
 void MapToolScene::RegisterCommand(ICommand* command)
 {
@@ -41,6 +42,8 @@ void MapToolScene::Save()
 				saveStream << mTileList[y][x]->GetFrameY();
 				saveStream << ',';
 				saveStream << (int)mTileList[y][x]->GetType();
+				saveStream << ',';
+				saveStream << (int)mTileList[y][x]->GetZaxis();
 				saveStream << endl;
 			}
 		}
@@ -80,6 +83,7 @@ void MapToolScene::Load()
 				int frameX;
 				int frameY;
 				int type;
+				int Zaxis;
 				string buffer;
 
 				getline(loadStream, buffer,',');
@@ -88,8 +92,10 @@ void MapToolScene::Load()
 				frameX = stoi(buffer);
 				getline(loadStream, buffer, ',');
 				frameY = stoi(buffer);
-				getline(loadStream, buffer);
+				getline(loadStream, buffer, ',');
 				type = stoi(buffer);
+				getline(loadStream, buffer);
+				Zaxis = stoi(buffer);
 
 				wstring wstr;
 				wstr.assign(key.begin(), key.end());
@@ -97,6 +103,7 @@ void MapToolScene::Load()
 				mTileList[y][x]->SetFrameX(frameX);
 				mTileList[y][x]->SetFrameY(frameY);
 				mTileList[y][x]->SetType((TileType)type);
+				mTileList[y][x]->SetZaxis(Zaxis);
 			}
 		}
 	}
@@ -184,7 +191,7 @@ void MapToolScene::stackClear(stack<ICommand*>* stack)
 
 void MapToolScene::Init()
 {
-	IMAGEMANAGER->LoadFromFile(L"Tiles", Resources(L"tile_test.bmp"), 372, 372, 3,6, true);
+	IMAGEMANAGER->LoadFromFile(L"Tiles", Resources(L"tile_test2.bmp"), 180, 135, 3,3, true);
 	IMAGEMANAGER->LoadFromFile(L"Tree2", ResourcesObject(L"Tree2.bmp"), 86, 142, true);
 	IMAGEMANAGER->LoadFromFile(L"Tree3", ResourcesObject(L"Tree3.bmp"), 92, 190, true);
 	IMAGEMANAGER->LoadFromFile(L"Tree9", ResourcesObject(L"Tree9.bmp"), 344, 290, true);
@@ -201,6 +208,7 @@ void MapToolScene::Init()
 	IMAGEMANAGER->LoadFromFile(L"Door1_2", ResourcesObject(L"Door1_2.bmp"), 80, 279, true);
 	IMAGEMANAGER->LoadFromFile(L"Door2_1", ResourcesObject(L"Door2_1.bmp"), 80, 279, true);
 	IMAGEMANAGER->LoadFromFile(L"Door2_2", ResourcesObject(L"Door2_2.bmp"), 80, 279, true);
+	IMAGEMANAGER->LoadFromFile(L"witch_tower", ResourcesObject(L"witch_tower.bmp"), 350, 333, true);
 
 	mImage = IMAGEMANAGER->FindImage(L"Tiles");
 
@@ -213,7 +221,7 @@ void MapToolScene::Init()
 			( 
 				new Tile
 				(
-				mImage,
+				nullptr,
 				StartX+(x-y)*TileSizeX/2,
 				StartY+(x+y)*TileSizeY/2, 
 				2,
@@ -230,7 +238,7 @@ void MapToolScene::Init()
 	for (int y = 0; y < 3; y++) //Å¸ÀÏ ÆÈ·¹Æ®
 	{
 		vector <Pallete*> tmp;
-		for (int x = 0; x < 5; x++)
+		for (int x = 0; x < 3; x++)
 		{
 			tmp.push_back(
 				new Pallete
@@ -265,6 +273,7 @@ void MapToolScene::Init()
 	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Door1_2"), 950, 70));
 	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Door2_1"), 1000, 70));
 	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"Door2_2"), 1050, 70));
+	tmp.push_back(new MapObjectPallete(IMAGEMANAGER->FindImage(L"witch_tower"), 1100, 70));
 	mMapObjectPallete.push_back(tmp);
 
 	mPalletRc = RectMake(900, 100, 5 * 50, 3 * 25);
@@ -281,6 +290,7 @@ void MapToolScene::Init()
 	CAMERA->SetY(StartY);
 	CAMERA->SetMoveSpeed(20.f);
 
+	mTileSelect = new TileSelect;
 }
 
 void MapToolScene::Release()
@@ -327,10 +337,20 @@ void MapToolScene::Release()
 	SafeDelete(mRedo);
 	SafeDelete(mChangeLayer);
 	SafeDelete(mNext);
+	SafeDelete(mTileSelect);
 }
 
 void MapToolScene::Update()
 {
+	if (INPUT->GetKeyDown(VK_CONTROL))
+	{
+		zaxis += 15;
+		if (zaxis > 15)
+			zaxis = -15;
+	}
+	TILELIST->SetMap(mTileList);
+	mTileSelect->Update();
+	
 	mCurrentTile = nullptr;
 
 	int x = CAMERA->CameraMouseY() / TileSizeY + CAMERA->CameraMouseX() / TileSizeX - (StartX / TileSizeX + StartY / TileSizeY);
@@ -376,6 +396,7 @@ void MapToolScene::Update()
 				mCurrentTile->GetFrameY() != mCurrentPallete->GetFrameY() or
 				mCurrentTile->GetType() != mCurrentPallete->GetType())
 			{
+				mCurrentTile->SetZaxis(zaxis);
 				IBrushHandle* command = new IBrushHandle(mCurrentTile, mCurrentPallete);
 				RegisterCommand(command);
 			}
@@ -435,6 +456,7 @@ void MapToolScene::Update()
 		mNext->Update();
 
 	}
+	
 }
 
 void MapToolScene::Render(HDC hdc)
@@ -572,5 +594,7 @@ void MapToolScene::Render(HDC hdc)
 		}
 	}
 
-	
+	wstring text = to_wstring(zaxis);
+	TextOut(hdc, 300, 150, text.c_str(), text.length());
+	mTileSelect->Render(hdc);
 }
