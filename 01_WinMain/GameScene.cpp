@@ -8,13 +8,13 @@ void GameScene::Init()
 {
 	MapLoad();
 	
-	Obj->AddObject(ObjectLayer::Player, new Player(30, 30, 30, 30));
+	Obj->AddObject(ObjectLayer::Player, new Player(30, 44, 30, 30));
 	//Obj->AddObject(ObjectLayer::Enemy,new Dumb());
 	Obj->Init();
 
 	CAMERA->ChangeMode(Camera::Mode::Follow);
 	CAMERA->SetTarget(Obj->FindObject("player"));
-	IMAGEMANAGER->LoadFromFile(L"back", Resources(L"back1.bmp"), 1280, 740, false);
+	IMAGEMANAGER->LoadFromFile(L"back", Resources(L"back3.bmp"), 1280, 740, false);
 	mBack = new Image;
 	mBack = IMAGEMANAGER->FindImage(L"back");
 }
@@ -37,7 +37,7 @@ void GameScene::Update()
 	if (offsetY > offsetX / 2 + TileSizeY / 2) { y++; }
 	if (offsetY > 3 * TileSizeY / 2 - offsetX / 2) { x++; }
 }
-
+ 
 void GameScene::Render(HDC hdc)
 {
 	mBack->Render(hdc, 0, 0);

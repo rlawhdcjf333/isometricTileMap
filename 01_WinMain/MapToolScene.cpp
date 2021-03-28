@@ -191,7 +191,7 @@ void MapToolScene::stackClear(stack<ICommand*>* stack)
 
 void MapToolScene::Init()
 {
-	IMAGEMANAGER->LoadFromFile(L"Tiles", Resources(L"tile_test2.bmp"), 180, 135, 3,3, true);
+	IMAGEMANAGER->LoadFromFile(L"Tiles", Resources(L"Tiles.bmp"), 180, 180, 3,4, true);
 	IMAGEMANAGER->LoadFromFile(L"Tree2", ResourcesObject(L"Tree2.bmp"), 86, 142, true);
 	IMAGEMANAGER->LoadFromFile(L"Tree3", ResourcesObject(L"Tree3.bmp"), 92, 190, true);
 	IMAGEMANAGER->LoadFromFile(L"Tree9", ResourcesObject(L"Tree9.bmp"), 344, 290, true);
@@ -259,7 +259,7 @@ void MapToolScene::Init()
 	for (int y = 0; y < 3; y++) //Å¸ÀÏ ÆÈ·¹Æ®
 	{
 		vector <Pallete*> tmp;
-		for (int x = 0; x < 3; x++)
+		for (int x = 0; x < 4; x++)
 		{
 			tmp.push_back(
 				new Pallete
@@ -387,7 +387,7 @@ void MapToolScene::Update()
 	{
 		zaxis += 15;
 		if (zaxis > 15)
-			zaxis = -15;
+			zaxis = -45;
 	}
 	TILELIST->SetMap(mTileList);
 	mTileSelect->Update();

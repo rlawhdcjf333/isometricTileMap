@@ -1,4 +1,4 @@
-Tree10,660,828
-Tree11,-413,737
-Tree8,278,1521
-Tree8,1187,1512
+Building2,894,1123
+Building4,362,1126
+Building3,631,1053
+Post,910,1132
